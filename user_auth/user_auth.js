@@ -1,5 +1,6 @@
 const express = require('express');
-const { pool} = require('../db'); 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -16,7 +17,7 @@ router.post('/api/register', async (req, res) => {
 
     // Check if the user already exists in the database
     const checkUserQuery = 'SELECT * FROM users_auth WHERE email = $1;';
-    const checkUserResult = await pool.query(checkUserQuery, [email]);
+    const checkUserResult = await prisma.query(checkUserQuery, [email]);
 
     if (checkUserResult.rows.length > 0) {
       return res.status(409).json({ error: 'User already exists.' });
@@ -30,7 +31,7 @@ router.post('/api/register', async (req, res) => {
     const insertUserQuery =
       'INSERT INTO users_auth (username, phone_numer, email, password) VALUES ($1, $2, $3, $4) RETURNING id;';
     const insertUserValues = [username, phone_number, email, hashedPassword];
-    const insertUserResult = await pool.query(insertUserQuery, insertUserValues);
+    const insertUserResult = await prisma.query(insertUserQuery, insertUserValues);
 
     const userId = insertUserResult.rows[0].id;
     // console.log(userId)
@@ -48,7 +49,7 @@ router.post('/api/login', async (req, res) => {
 
     // Check if the user exists in the database
     const checkUserQuery = 'SELECT * FROM users_auth WHERE email = $1;';
-    const checkUserResult = await pool.query(checkUserQuery, [email]);
+    const checkUserResult = await prisma.query(checkUserQuery, [email]);
 
     if (checkUserResult.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password.' });

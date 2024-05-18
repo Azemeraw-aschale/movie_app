@@ -1,6 +1,6 @@
 const express = require('express');
 // const { pool} = require('./db');
-const { pool } = require('./db'); 
+// const { pool } = require('./db'); 
 const app = express();
 // createTables();
 // Other middleware and configurations
@@ -19,6 +19,6 @@ app.use(updateMovieRouter);
 app.use(userAuthRouter);
 
 // Start the server
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(8080, () => {
+  console.log('Server is running on port 8080');
 });

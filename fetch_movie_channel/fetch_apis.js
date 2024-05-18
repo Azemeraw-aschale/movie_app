@@ -1,5 +1,7 @@
 const express = require('express');
-const { pool} = require('../db'); 
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 const router = express.Router();
 
@@ -8,7 +10,7 @@ const router = express.Router();
 router.get('/api/movies', async (req, res) => {
     try {
       const query = 'SELECT * FROM movies;';
-      const result = await pool.query(query);
+      const result = await prisma.query(query);
       const movies = result.rows;
   
       res.status(200).json({ movies });
@@ -21,7 +23,7 @@ router.get('/api/movies', async (req, res) => {
     try {
       const movieId = req.params.id;
       const query = 'SELECT * FROM movies WHERE id = $1;';
-      const result = await pool.query(query, [movieId]);
+      const result = await prisma.query(query, [movieId]);
   
       if (result.rows.length > 0) {
         const movie = result.rows[0];
@@ -37,7 +39,7 @@ router.get('/api/movies', async (req, res) => {
   router.get('/api/channels', async (req, res) => {
     try {
       const query = 'SELECT * FROM channels;';
-      const result = await pool.query(query);
+      const result = await prisma.query(query);
       const channels = result.rows;
   
       res.status(200).json({ channels });
@@ -52,7 +54,7 @@ try {
 
     const channelId =req.params.id;
     const query='select * from channels wher id=$1;';
-    const result = await pool.query(query,[channelId]);
+    const result = await prisma.query(query,[channelId]);
 
     if(result.rows.length>0){
         const channel=result.rows[0];
