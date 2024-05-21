@@ -111,40 +111,52 @@ router.put('/api/movies/:id', async (req, res) => {
   });
   router.delete('/api/movies/:id', async (req, res) => {
     try {
-      const movieId = req.params.id;
-  
-      // Check if the movie exists
-      const checkMovieQuery = 'SELECT * FROM movies WHERE id = $1;';
-      const checkMovieResult = await prisma.query(checkMovieQuery, [movieId]);
-  
-      if (checkMovieResult.rows.length === 0) {
-        return res.status(404).json({ error: 'Movie not found.' });
+      const mov_Id = req.params.id;
+   console.log(mov_Id)
+      // Check if the channel exists
+      // const checkChannelQuery = 'SELECT * FROM channels WHERE id = $1;';
+      const checkChannelQuery = await prisma.movies.findMany({
+        where: {
+          id: parseInt(mov_Id) // Convert the channelId to an integer
+        }
+      });
+      if (checkChannelQuery.length === 0) {
+        return res.status(404).json({ error: 'movie not found.' });
       }
   
-      const deleteQuery = 'DELETE FROM movies WHERE id = $1;';
-      await prisma.query(deleteQuery, [movieId]);
+      await prisma.movies.delete({
+        where: {
+          id: parseInt(mov_Id) // Convert the channelId to an integer
+        }
+      });
   
-      res.status(200).json({ message: 'Movie deleted successfully' });
+      res.status(200).json({ message: 'program deleted successfully' });
     } catch (error) {
-      console.error('Error deleting movie:', error);
-      res.status(500).json({ error: 'An error occurred while deleting the movie.' });
+      console.error('Error deleting program:', error);
+      res.status(500).json({ error: 'An error occurred while deleting the program.' });
     }
   });
   
   router.delete('/api/channels/:id', async (req, res) => {
     try {
       const channelId = req.params.id;
-  
+   console.log(channelId)
       // Check if the channel exists
-      const checkChannelQuery = 'SELECT * FROM channels WHERE id = $1;';
-      const checkChannelResult = await prisma.query(checkChannelQuery, [channelId]);
-  
-      if (checkChannelResult.rows.length === 0) {
+      // const checkChannelQuery = 'SELECT * FROM channels WHERE id = $1;';
+      const checkChannelQuery = await prisma.channels.findMany({
+        where: {
+          id: parseInt(channelId) // Convert the channelId to an integer
+        }
+      });
+      if (checkChannelQuery.length === 0) {
         return res.status(404).json({ error: 'Channel not found.' });
       }
   
-      const deleteQuery = 'DELETE FROM channels WHERE id = $1;';
-      await prisma.query(deleteQuery, [channelId]);
+      await prisma.channels.delete({
+        where: {
+          id: parseInt(channelId) // Convert the channelId to an integer
+        }
+      });
   
       res.status(200).json({ message: 'Channel deleted successfully' });
     } catch (error) {

@@ -21,7 +21,22 @@ router.post('/api/categories', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding the category.' });
   }
 });
+router.post('/api/channels', async (req, res) => {
+  try {
+    const { name } = req.body;
 
+    const chanales = await prisma.channels.create({
+      data: {
+        name,
+      },
+    });
+
+    res.status(200).json({ message: 'channal inserted successfully', chanales });
+  } catch (error) {
+    console.error('Error adding channal:', error);
+    res.status(500).json({ error: 'An error occurred while adding the channal.' });
+  }
+});
 // Add a new type
 router.post('/api/types', async (req, res) => {
   try {

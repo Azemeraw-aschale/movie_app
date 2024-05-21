@@ -9,11 +9,10 @@ const router = express.Router();
 
 router.get('/api/movies', async (req, res) => {
     try {
-      const query = 'SELECT * FROM movies;';
-      const result = await prisma.query(query);
-      const movies = result.rows;
-  
+      // const query = 'SELECT * FROM movies;';
+      const movies = await prisma.movies.findMany();
       res.status(200).json({ movies });
+      
     } catch (error) {
       console.error('Error fetching movies:', error);
       res.status(500).json({ error: 'An error occurred while fetching movies.' });
@@ -38,10 +37,7 @@ router.get('/api/movies', async (req, res) => {
   });
   router.get('/api/channels', async (req, res) => {
     try {
-      const query = 'SELECT * FROM channels;';
-      const result = await prisma.query(query);
-      const channels = result.rows;
-  
+      const channels = await prisma.channels.findMany();
       res.status(200).json({ channels });
     } catch (error) {
       console.error('Error fetching channels:', error);

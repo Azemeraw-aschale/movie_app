@@ -46,7 +46,6 @@ router.post('/api/register', async (req, res) => {
 router.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-
     // Check if the user exists in the database
     const checkUserQuery = 'SELECT * FROM users_auth WHERE email = $1;';
     const checkUserResult = await prisma.query(checkUserQuery, [email]);
