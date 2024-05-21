@@ -17,7 +17,6 @@ import {
   TextField,
   Stack,
   Button,
-
 } from '@mui/material';
 // import { withStyles } from '@material-ui/core/styles';
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -56,6 +55,7 @@ const ChannelPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
+  const [data, setData] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -161,9 +161,17 @@ const ChannelPage = () => {
       await dispatch(fetchChanal());
     }
   };
+  // const [showSidebar, setShowSidebar] = useState(false);   
+  //  const toggleSidebar = () => {
+  //   setShowSidebar(!showSidebar);
+  // };
   return (
     <div style={{ display: 'flex' }}>
-      
+      {/* <NavBar>
+        <IconButton onClick={toggleSidebar}>
+          <MenuIcon />
+        </IconButton>
+    </NavBar> */}
       <SideBar/>
       <div style={{ flex: '1' }}>
         <NavBar /> {/* Include the NavBar component */}
