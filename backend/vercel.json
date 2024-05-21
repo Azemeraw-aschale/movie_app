@@ -1,15 +1,9 @@
 {
-    "version":2,
-    "builds":[
-        {
-            "src":"./server.js",
-            "use":"@vercel/node"
-        }
-    ],
-    "backend":[
-        {
-            "src":"/(.*)",
-            "dest":"/"
-        }
+    "version": 2,
+    "builds": [
+      {
+        "src": "./server.js",
+        "use": "@vercel/node"
+      }
     ]
-}
+  }
