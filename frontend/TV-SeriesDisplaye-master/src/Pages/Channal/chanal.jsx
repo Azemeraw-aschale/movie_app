@@ -56,7 +56,7 @@ const ChannelPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
-
+  const [data, setData] = useState(null);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
