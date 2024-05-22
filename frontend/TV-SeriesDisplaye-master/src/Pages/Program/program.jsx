@@ -48,6 +48,13 @@ const style = {
   flexDirection:'column',
   alignItems:'center',
   p: 4,
+  display:{
+    xs:'flex',
+    sm:'block',
+    
+  },
+  justigyContent:'center',
+  alignItems:'center',
 };
 
 

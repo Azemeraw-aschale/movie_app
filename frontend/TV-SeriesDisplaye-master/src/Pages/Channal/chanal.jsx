@@ -24,7 +24,7 @@ import SideBar from '../SideBar/SideBar';
 import NavBar from '../AppBar/NavBar'; // Import the NavBar component
 import Modal from '@mui/material/Modal';
 import { light } from '@mui/material/styles/createPalette'
-import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material'
+import { Add, Filter, ImportExport, Person2TwoTone, PieChart, Search } from '@mui/icons-material'
 import { addChannal, fetchChanal, deleteChanal, updateChanal } from '../../apis/chanalSlice';
 import TablePagination from '@mui/material/TablePagination';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -46,6 +46,10 @@ const style = {
   alignItems: 'center',
   p: 4,
 };
+
+
+
+
 
 const ChannelPage = () => {
   const [open, setOpen] = useState(false);
@@ -172,7 +176,9 @@ const ChannelPage = () => {
           <MenuIcon />
         </IconButton>
     </NavBar> */}
-      <SideBar/>
+      
+        <SideBar/>
+      
       <div style={{ flex: '1' }}>
         <NavBar /> {/* Include the NavBar component */}
         <Modal
@@ -222,7 +228,7 @@ const ChannelPage = () => {
               bgcolor="lightgrey"
               borderRadius={2}
             >
-              <IconButton>
+              <IconButton >
                 <Search />
               </IconButton>
               <InputBase
@@ -305,6 +311,7 @@ const ChannelPage = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
           </TableContainer>
+          
         </Box>
       </div>
     </div>
