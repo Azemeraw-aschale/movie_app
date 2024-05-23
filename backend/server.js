@@ -3,10 +3,12 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 
 const app = express();
+const prisma = new PrismaClient();
+
 app.use(cors());
 
-// Create an instance of the Prisma Client
-const prisma = new PrismaClient();
+app.use(express.json());
+
 
 // Other middleware and configurations
 
@@ -16,7 +18,9 @@ const fetchMovieRouter = require('./fetch_movie_channel/fetch_apis');
 const updateMovieRouter = require('./update_data/update_');
 const userAuthRouter = require('./user_auth/user_auth');
 
-app.use(express.json());
+
+
+
 
 // Use the addChannel router
 app.use(addChannelRouter);
@@ -34,6 +38,12 @@ prisma.$connect()
   });
 
 // Start the server
-app.listen(8080, () => {
+app.listen(8080, async () => {
+  try {
+    await prisma.$connect();
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
   console.log('Server is running on port 8080');
 });

@@ -20,6 +20,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextareaAutosize,
 } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Modal from '@mui/material/Modal';
@@ -30,6 +31,8 @@ import NavBar from '../AppBar/NavBar';
 import { addChannal, fetchChanal, deleteChanal, updateChanal } from '../../apis/chanalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMovie, deleteMovie, fetchMovie } from '../../apis/movieSlice';
+import { fetchCatagory } from '../../apis/programSlice';
+import { fetchTypes } from '../../apis/typesSlice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -48,12 +51,20 @@ const style = {
   flexDirection:'column',
   alignItems:'center',
   p: 4,
+  display:{
+    xs:'flex',
+    sm:'block',
+    
+  },
+  justigyContent:'center',
+  alignItems:'center',
 };
 
 
 
 
 const Program = ({show,onClose}) => {
+
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -77,8 +88,33 @@ const Program = ({show,onClose}) => {
 //   fetchChannels();
 // }, []);
 
+useEffect(() => {
+  dispatch(fetchMovie());
+  dispatch(fetchChanal());
+  dispatch(fetchTypes());
+
+}, [dispatch]);
+
+
+useEffect(()=>{
+  dispatch(fetchCatagory());
+},[dispatch]);
+
+const chanal = useSelector((state) => state.chanals.data);
+const sortedChannels = chanal && chanal.channels ? [...chanal.channels] : [];
+console.log(sortedChannels);
+
   const prog_data = useSelector((state) => state.programs.data);
 
+  const movies_data = useSelector((state) =>state.catagories.data);
+
+  const type_data = useSelector((state) =>state.types.data);
+ 
+  const types = type_data && type_data.types? [...type_data.types] : [];
+  
+  const movies= movies_data && movies_data.catagory? [...movies_data.catagory] : [];
+  console.log("types data", types);
+  console.log("movies data", movies);
   console.log("mnmnmnmnm", prog_data);
   // hiint prog_data.movies from movies is  the table name 
   if (prog_data && prog_data.movies) {
@@ -97,9 +133,12 @@ const Program = ({show,onClose}) => {
     }
   );
   }
-  useEffect(() => {
-    dispatch(fetchMovie());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchMovie());
+  //   dispatch(fetchChanal());
+  //   dispatch(fetchTypes());
+  //   dispatch(fetchCatagory());
+  // }, [dispatch]);
   const [data, setData] = useState([
     {
       id: 3,
@@ -250,16 +289,35 @@ const Program = ({show,onClose}) => {
              <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
              onChange={handleChange} name='duration'/>
            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 4, display: 'flex', flexDirection: 'column' }}>
+           <Typography id="modal-modal-description" sx={{ mt: 4, display: 'flex', flexDirection: 'column' }}>
             Channel
-            <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
-            onChange={handleChange} name='channel'/>
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 4, display: 'flex', flexDirection: 'column' }}>
+            <Select
+              id="filled-basic"
+              variant="filled"
+              sx={{ width: '500px' }}
+              value={sortedChannels.length > 0 ? sortedChannels[0].id : ''}
+              onChange={handleChange}
+              name="channel"
+            >
+              {sortedChannels.map((channel) => (
+                <MenuItem key={channel.id} value={channel.id}>
+                  {channel.name}
+                </MenuItem>
+              ))}
+            </Select>
+            {/* Rest of your code */}
+          </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 4,ml:4, display: 'flex', flexDirection: 'column' }}>
             Descriptions
-            <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
-            onChange={handleChange} name='desc'/>
-            
+            <textarea
+              id="filled-basic"
+              sx={{ width: '500px', minHeight: '150px', resize: 'vertical' }}
+              value="description"
+              onChange={handleChange}
+              name="desc"
+              placeholder="Enter Description"
+            />
+           
             {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
               <InputLabel id="demo-simple-select-filled-label">Select..</InputLabel>
               <Select
@@ -284,45 +342,41 @@ const Program = ({show,onClose}) => {
               <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
               onChange={handleChange} name='title'/>
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 4,ml:4, display: 'flex', flexDirection: 'column' }}>Catagories
-              <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
-              onChange={handleChange} name='categori'/>
-              {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={age}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-            </FormControl> */}
+            <Typography id="modal-modal-description" sx={{ mt: 4,ml:4, display: 'flex', flexDirection: 'column' }}>
+            Types
+            <Select
+              id="filled-basic"
+              variant="filled"
+              sx={{ width: '500px' }}
+              value={types.length > 0 ? types[0].id : ''}
+              onChange={handleChange}
+              name="type"
+            >
+              {types.map((channel) => (
+                <MenuItem key={channel.id} value={channel.id}>
+                  {channel.name}
+                </MenuItem>
+              ))}
+            </Select>
+            {/* Rest of your code */}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 4,ml:4, display: 'flex', flexDirection: 'column' }}>Type
-          <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}  
-          onChange={handleChange} name='type'/>
-              {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-filled-label">Select</InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={age}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-            </FormControl> */}
+          <Typography id="modal-modal-description" sx={{ mt: 4,ml:4,display: 'flex', flexDirection: 'column' }}>
+            Category
+            <Select
+              id="filled-basic"
+              variant="filled"
+              sx={{ width: '500px' }}
+              value={movies.length > 0 ? movies[0].id : ''}
+              onChange={handleChange}
+              name="catagory"
+            >
+              {movies.map((channel) => (
+                <MenuItem key={channel.id} value={channel.id}>
+                  {channel.name}
+                </MenuItem>
+              ))}
+            </Select>
+            {/* Rest of your code */}
           </Typography>
         <Stack direction="row" spacing={2} sx={{ mt: 5, ml: 25 }}>
           <Button variant="outlined" sx={{ pr: 6, pl: 6 }} onClick={handleClose}>Cancel</Button>

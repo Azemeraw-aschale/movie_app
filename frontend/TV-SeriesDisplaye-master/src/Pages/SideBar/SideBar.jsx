@@ -1,4 +1,3 @@
-// SideBar.jsx
 import React from 'react';
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { DashboardOutlined, YoutubeSearchedForSharp, Person2TwoTone } from '@mui/icons-material';
@@ -6,7 +5,12 @@ import { Link } from 'react-router-dom';
 
 function Sidebar() {
   return (
-    <Box sx={{ width: 240, bgcolor: 'background.paper',height:'100vh' }}>
+    <Box sx={{
+      width: 240,
+      bgcolor: 'background.paper',
+      height: '100vh',
+      display: { xs: 'none', sm: 'block' },
+    }}>
       {/* Company Logo and Name */}
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2, ml: 5 }}>
         <img src="company-logo.png" alt="Company Logo" width={60} height={60} />
