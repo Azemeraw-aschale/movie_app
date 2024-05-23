@@ -14,8 +14,8 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/" element={<CardContainer />} />
-          {/* <Route path="/" element={<Home />} /> */}
+          {/* <Route path="/" element={<CardContainer />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/Channel" element={<Channel />} />
           <Route path="/Program" element={<Program />} />
         </Routes>

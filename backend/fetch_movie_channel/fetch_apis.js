@@ -8,16 +8,21 @@ const router = express.Router();
 // createTables();
 
 router.get('/api/movies', async (req, res) => {
-    try {
-      // const query = 'SELECT * FROM movies;';
-      const movies = await prisma.movies.findMany();
-      res.status(200).json({ movies });
-      
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      res.status(500).json({ error: 'An error occurred while fetching movies.' });
-    }
-  });
+  try {
+    const movies = await prisma.movies.findMany({
+      include: {
+        channels: true,
+        types: true,
+        categories: true,
+      },
+    });
+
+    res.status(200).json({ movies });
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the movies.' });
+  }
+});
   router.get('/api/movies/:id', async (req, res) => {
     try {
       const movieId = req.params.id;
@@ -44,6 +49,27 @@ router.get('/api/movies', async (req, res) => {
       res.status(500).json({ error: 'An error occurred while fetching channels.' });
     }
   });
+
+  router.get('/api/catagories', async (req, res) => {
+    try {
+      const catagory = await prisma.categories.findMany();
+      res.status(200).json({ catagory });
+    } catch (error) {
+      console.error('Error fetching channels:', error);
+      res.status(500).json({ error: 'An error occurred while fetching channels.' });
+    }
+  });
+
+  router.get('/api/types', async (req, res) => {
+    try {
+      const types = await prisma.types.findMany();
+      res.status(200).json({ types });
+    } catch (error) {
+      console.error('Error fetching channels:', error);
+      res.status(500).json({ error: 'An error occurred while fetching channels.' });
+    }
+  });
+
 router.get('/api/channels/:id' , async (req,res)=> {
 try {
     

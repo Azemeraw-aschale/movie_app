@@ -1,11 +1,14 @@
+
 import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
 import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material';
 import { IconButton, InputBase } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { PieChart } from '@mui/x-charts/PieChart'
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { light } from '@mui/material/styles/createPalette';
-
+import { useDispatch,useSelector } from 'react-redux';
+// import { fetchMovie, } from '../../apis/movieSlice';
+import { fetchPieChart,fetchChanal,fetchMovie,fetchLineChart,fetchUser } from '../../apis/dashboardSlice';
 
 const style = {
   position: 'absolute',
@@ -40,41 +43,33 @@ const size = {
 function Content() {
   // State for modal open/close
   const [open, setOpen] = React.useState(false);
+  const dispatch=useDispatch();
+  // const movie_data = useSelector((state) => state.dashboards.movieData);
+  // const chanal_data=useSelector((state)=>state.dashboards.chanalData);
+  // const pie_data=useSelector((state)=>state.dashboards.piechartData);
+  // const line_data=useSelector((state)=>state.dashboards.lineChartData);
+  // const user_data=useSelector((state)=>state.dashboards.userData);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  // if (movie_data && movie_data.movies) {
+  //   movie_data.movies.forEach((movie) => {
+  //     console.log("chanel id:", movie.id);
+  //     console.log("Channel name:", movie.name);
+
+  //   });
+  // }
+  useEffect(() => {
+    dispatch(fetchChanal());
+    dispatch(fetchUser());
+    dispatch(fetchLineChart());
+    dispatch(fetchPieChart());
+    dispatch(fetchMovie());
+  }, [dispatch]);
 
   return (
-    <div>
-      {/* Modal */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {/* Modal content */}
-          <Typography id="modal-modal-title" variant="h6" component="h2" style={{ fontWeight: 'bold', fontSize: '30px' }}>
-            Add Channel
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 10, display: 'flex', flexDirection: 'column' }}>
-            Name
-            <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }} />
-          </Typography>
+  <div>
 
-          <Stack direction="row" spacing={2} sx={{ mt: 5, ml: 25 }}>
-            <Button variant="outlined" sx={{ pr: 6, pl: 6 }}>
-              Cancel
-            </Button>
-
-            <Button variant="contained" href="#outlined-buttons" sx={{ pr: 6, pl: 6 }}>
-              Add
-            </Button>
-          </Stack>
-        </Box>
-      </Modal>
-
-      {/* Search and control buttons */}
+      {/* Statistics cards */}
       <Box margin={2} bgcolor={light}>
         <Box
           flexGrow={1}
@@ -123,18 +118,16 @@ function Content() {
           {/* Add Channel button */}
           <Box display="flex" alignItems="center" ml={2}>
             <Typography variant="body1" bgcolor="blue" p={1} borderRadius={2}>
-              <Button onClick={handleOpen}> Add Channel</Button>
+              <Button onClick={handleOpen}> Add Filter</Button>
             </Typography>
           </Box>
         </Box>
       </Box>
-
-      {/* Statistics cards */}
       <Box display="flex" justifyContent="space-between" mt={5} ml={5} mr={5}>
         <Card sx={{ display: 'flex', width: '25%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6">System user</Typography>
-            <Typography variant="h4">37</Typography>
+            <Typography variant="h4">99</Typography>
             <Typography variant="body1">12% This Month</Typography>
           </Box>
           <Box>
@@ -145,7 +138,7 @@ function Content() {
         </Card>
         <Card sx={{display: 'flex', width: '25%', padding: '16px', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h6">System user</Typography>
+            <Typography variant="h6">45</Typography>
             <Typography variant="h4">37</Typography>
             <Typography variant="body1">12% This Month</Typography>
           </Box>
@@ -157,7 +150,7 @@ function Content() {
         </Card>
         <Card sx={{ display: 'flex', width: '25%', padding: '16px', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Typography variant="h6">System user</Typography>
+            <Typography variant="h6">56</Typography>
             <Typography variant="h4">37</Typography>
             <Typography variant="body1">12% This Month</Typography>
           </Box>
@@ -167,9 +160,7 @@ function Content() {
             </IconButton>
           </Box>
         </Card>
-
-        
-      </Box>
+</Box>
       <Card sx={{width:'50%',height:'50%',mt:'20',pt:'10px'}}>
       <PieChart
               series={[
