@@ -21,7 +21,6 @@ import {
   MenuItem,
   Select,
   TextareaAutosize,
-
 } from "@mui/material";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
@@ -42,7 +41,6 @@ import { fetchTypes } from "../../apis/typesSlice";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -58,14 +56,12 @@ const style = {
   flexDirection: "column",
   alignItems: "center",
   p: 4,
-
   display: {
     xs: "flex",
     sm: "block",
   },
   justigyContent: "center",
   alignItems: "center",
-
 };
 
 const Program = ({ show, onClose }) => {
@@ -91,10 +87,8 @@ const Program = ({ show, onClose }) => {
     dispatch(fetchTypes());
     // dispatch(fetchCatagory());
 
-
     fetchCatagory();
   }, [dispatch]);
-
 
   // useEffect(()=>{
   //   dispatch(fetchCatagory());
@@ -104,27 +98,9 @@ const Program = ({ show, onClose }) => {
   const sortedChannels = chanal && chanal.channels ? [...chanal.channels] : [];
   console.log(sortedChannels);
 
-useEffect(() => {
-  dispatch(fetchMovie());
-  dispatch(fetchChanal());
-  dispatch(fetchTypes());
-
-}, [dispatch]);
-
-
-useEffect(()=>{
-  dispatch(fetchCatagory());
-},[dispatch]);
-
-const chanal = useSelector((state) => state.chanals.data);
-const sortedChannels = chanal && chanal.channels ? [...chanal.channels] : [];
-console.log(sortedChannels);
-
   const prog_data = useSelector((state) => state.programs.data);
 
-
   const movies_data = useSelector((state) => state.catagories.typesdata);
-
 
   const type_data = useSelector((state) => state.types.data);
 
@@ -136,8 +112,6 @@ console.log(sortedChannels);
   console.log("types data", types);
   console.log("movies data", movies);
   console.log("mnmnmnmnm", prog_data);
-
-
 
   const [data, setData] = useState([
     {
@@ -271,7 +245,6 @@ console.log(sortedChannels);
   };
   return (
     <>
-
       <div style={{ display: "flex" }}>
         <SideBar />
         <div style={{ flex: "1" }}>
@@ -375,7 +348,6 @@ console.log(sortedChannels);
                       }}
                     />
                     {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-
               <InputLabel id="demo-simple-select-filled-label">Select..</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
@@ -391,7 +363,6 @@ console.log(sortedChannels);
                 ))}
               </Select>
             </FormControl> */}
-
                   </Typography>
                 </Box>
                 <Box>
@@ -473,7 +444,6 @@ console.log(sortedChannels);
                     >
                       Cancel
                     </Button>
-
 
                     <Button
                       onClick={handleSubmit}
