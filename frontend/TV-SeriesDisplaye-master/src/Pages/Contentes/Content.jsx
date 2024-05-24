@@ -3,7 +3,6 @@ import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
 import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material';
 import { IconButton, InputBase } from '@mui/material';
 import Modal from '@mui/material/Modal';
-
 import React,{useEffect,useState} from 'react';
 import { light } from '@mui/material/styles/createPalette';
 import { useDispatch,useSelector } from 'react-redux';
@@ -18,7 +17,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 're
 import { fetchchanalCount } from '../../apis/chanalcountSlice';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
 
 const style = {
   position: 'absolute',
@@ -38,7 +36,6 @@ const style = {
 };
 
 // Define the data for the pie chart
-
 const onPieEnter = (data, index) => {
   // Handle the pie enter event
   console.log('Pie entered:', data, index);
@@ -50,20 +47,17 @@ const data = [
   { name: 'C', value: 300 },
   { name: 'D', value: 400 },
 ];
-
 const size = {
   width: 400,
   height: 200,
 };
 
 function Content() {
-
   const [open, setOpen] = React.useState(false);
   const dispatch=useDispatch();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { usersCount, isLoading, error } = useSelector((state) => state.users);
-
 
   useEffect(() => {
     dispatch(fetchChanal());
@@ -71,7 +65,6 @@ function Content() {
     dispatch(fetchLineChart());
     dispatch(fetchPieChart());
     dispatch(fetchMovie());
-
     dispatch(fetchchanalCount());
     dispatch(fetchmoviesCount());
     dispatch(fetchUsersCount());
@@ -122,7 +115,6 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   return (
   <div>
-
 
       {/* Statistics cards */}
       <Box margin={2} bgcolor={light}>
@@ -182,9 +174,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         <Card sx={{ display: 'flex', width: '25%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6">System user</Typography>
-
-            <Typography variant="h4">99</Typography>
-
+            <Typography variant="h4">{usersCount}</Typography>
             <Typography variant="body1">12% This Month</Typography>
           </Box>
           <Box>
@@ -218,7 +208,6 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
           </Box>
         </Card>
 </Box>
-
 {/* <Box> */}
 <Card sx={{ width: '60%', height: '25%', mt: '20', pt: '10px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }}>
   <Box margin={2}>
@@ -234,7 +223,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
         paddingAngle={5}
         dataKey="value"
         onMouseEnter={onPieEnter}
-      />
+      >
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
@@ -258,7 +247,6 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 </Card>
 
 {/* </Box> */}
-
     </div>
   );
 }
