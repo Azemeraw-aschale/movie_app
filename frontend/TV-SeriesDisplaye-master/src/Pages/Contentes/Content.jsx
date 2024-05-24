@@ -3,12 +3,22 @@ import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
 import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material';
 import { IconButton, InputBase } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { PieChart } from '@mui/x-charts/PieChart'
+
 import React,{useEffect,useState} from 'react';
 import { light } from '@mui/material/styles/createPalette';
 import { useDispatch,useSelector } from 'react-redux';
-// import { fetchMovie, } from '../../apis/movieSlice';
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer,Label} from 'recharts';
 import { fetchPieChart,fetchChanal,fetchMovie,fetchLineChart,fetchUser } from '../../apis/dashboardSlice';
+// import { fetchchanalCount } from '../../apis/chanalcountSlice';
+import { fetchmoviesCount } from '../../apis/programDashboardSlice';
+// import { fetchchanalCount } from '../../apis/chanalcountSlice';
+// import { fetchusersCount } from '../../apis/userDashboardSlice';
+import { fetchUsersCount } from '../../apis/userDashboardSlice';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import { fetchchanalCount } from '../../apis/chanalcountSlice';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
 
 const style = {
   position: 'absolute',
@@ -28,11 +38,17 @@ const style = {
 };
 
 // Define the data for the pie chart
+
+const onPieEnter = (data, index) => {
+  // Handle the pie enter event
+  console.log('Pie entered:', data, index);
+};
+
 const data = [
-  { value: 5, label: 'A' },
-  { value: 10, label: 'B' },
-  { value: 15, label: 'C' },
-  { value: 20, label: 'D' },
+  { name: 'A', value: 100 },
+  { name: 'B', value: 200 },
+  { name: 'C', value: 300 },
+  { name: 'D', value: 400 },
 ];
 
 const size = {
@@ -41,33 +57,72 @@ const size = {
 };
 
 function Content() {
-  // State for modal open/close
+
   const [open, setOpen] = React.useState(false);
   const dispatch=useDispatch();
-  // const movie_data = useSelector((state) => state.dashboards.movieData);
-  // const chanal_data=useSelector((state)=>state.dashboards.chanalData);
-  // const pie_data=useSelector((state)=>state.dashboards.piechartData);
-  // const line_data=useSelector((state)=>state.dashboards.lineChartData);
-  // const user_data=useSelector((state)=>state.dashboards.userData);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // if (movie_data && movie_data.movies) {
-  //   movie_data.movies.forEach((movie) => {
-  //     console.log("chanel id:", movie.id);
-  //     console.log("Channel name:", movie.name);
+  const { usersCount, isLoading, error } = useSelector((state) => state.users);
 
-  //   });
-  // }
+
   useEffect(() => {
     dispatch(fetchChanal());
     dispatch(fetchUser());
     dispatch(fetchLineChart());
     dispatch(fetchPieChart());
     dispatch(fetchMovie());
+
+    dispatch(fetchchanalCount());
+    dispatch(fetchmoviesCount());
+    dispatch(fetchUsersCount());
   }, [dispatch]);
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+  
+  if (usersCount) {
+    console.log("that ok  .....", usersCount);
+    console.log("that ok  .....", usersCount.count);
+  }
+  
+
+const data = [
+  { name: 'Group A', value: 400 },
+  { name: 'Group B', value: 300 },
+  { name: 'Group C', value: 300 },
+  { name: 'Group D', value: 200 },
+];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  const lineChartData = [
+    { name: 'Jan', value: 400 },
+    { name: 'Feb', value: 300 },
+    { name: 'Mar', value: 300 },
+    { name: 'Apr', value: 200 },
+    { name: 'May', value: 400 },
+    { name: 'Jun', value: 300 },
+  ];
+
+  const anotherLineChartData = [
+    { name: 'prog', value: 677 },
+    { name: 'Feb', value: 300 },
+    { name: 'Mar', value: 300 },
+    { name: 'Apr', value: 200 },
+    { name: 'May', value: 400 },
+    { name: 'Jun', value: 300 },
+  ];
+
+
+
 
   return (
   <div>
+
 
       {/* Statistics cards */}
       <Box margin={2} bgcolor={light}>
@@ -127,7 +182,9 @@ function Content() {
         <Card sx={{ display: 'flex', width: '25%', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6">System user</Typography>
+
             <Typography variant="h4">99</Typography>
+
             <Typography variant="body1">12% This Month</Typography>
           </Box>
           <Box>
@@ -161,23 +218,50 @@ function Content() {
           </Box>
         </Card>
 </Box>
-      <Card sx={{width:'50%',height:'50%',mt:'20',pt:'10px'}}>
-      <PieChart
-              series={[
-                {
-                  data: [
-                    { id: 0, value: 10, label: 'series A' },
-                    { id: 1, value: 15, label: 'series B' },
-                    { id: 2, value: 20, label: 'series C' },
-                   ],
-                },
-              ]}
-              width={400}
-              height={200}
-            />
+
+{/* <Box> */}
+<Card sx={{ width: '60%', height: '25%', mt: '20', pt: '10px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }}>
+  <Box margin={2}>
+    <PieChart width={800} height={400}>
+      <text x={80} y={200} textAnchor="end" dominantBaseline="middle"></text>
+      <Pie
+        data={data}
+        cx={300}
+        cy={150}
+        innerRadius={60}
+        outerRadius={80}
+        fill="#8884d8"
+        paddingAngle={5}
+        dataKey="value"
+        onMouseEnter={onPieEnter}
+      />
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+        <Label value="Department" position="center" />
+      </Pie>
+    </PieChart>
+  </Box>
+
 </Card>
+<Card sx={{ width: '60%', height: '35%', mt: '20', pt: '10px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }}>
+<Box margin={2}>
+<LineChart width={800} height={400} data={[...lineChartData, ...anotherLineChartData]}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+            </LineChart>
+          </Box>
+</Card>
+
+{/* </Box> */}
+
     </div>
   );
 }
+
 
 export default Content;

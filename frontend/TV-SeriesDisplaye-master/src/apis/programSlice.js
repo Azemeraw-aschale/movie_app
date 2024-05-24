@@ -34,6 +34,7 @@ export const fetchProgram=createAsyncThunk(
        return error.code;
      }
 });
+
 export const fetchCatagory=createAsyncThunk(
   "fetch/program",
   async ( page = 1 ) => {
@@ -45,6 +46,7 @@ export const fetchCatagory=createAsyncThunk(
      return error.code;
    }
 });
+
 
 
 
@@ -87,11 +89,8 @@ export const updateProgram= createAsyncThunk(
      builder.addCase(fetchProgram.pending, (state, action) => {
       state.isLoading = true;
      })
-     builder.addCase(fetchCatagory.fulfilled, (state, action) => {
-      state.isLoading = false;
-      console.log(action.payload)
-      state.data = action.payload
-     })
+
+
      builder.addCase(fetchProgram.rejected, (state, action) => {
       state.isError = true;
      }).addCase(deleteProgram.fulfilled,(state,action) =>{

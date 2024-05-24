@@ -51,11 +51,15 @@ const style = {
 
 
 
+
 const ChannelPage = () => {
+
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const chanal = useSelector((state) => state.chanals.data);
+  const [users, setUsers] = useState([]);
 
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
@@ -100,7 +104,14 @@ const ChannelPage = () => {
   useEffect(() => {
     dispatch(fetchChanal());
   }, [dispatch]);
-
+  const [isActive, setIsActive] = useState(false);
+  // const handleSwitchChange = () => {
+  //   setIsActive(!isActive);
+  // };
+  const handleSwitchChange = (index) => {
+    setSelectedIndex(index);
+    setIsActive((prevState) => !prevState);
+  };
 
 
   const [formData, setFormData] = useState({
@@ -117,6 +128,7 @@ const ChannelPage = () => {
       )
     );
   };
+  
   const paginatedChannels = sortedChannels.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -267,25 +279,74 @@ const ChannelPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedChannels.map((item) => (
+            {paginatedChannels.map((item,index) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Switch
-                      checked={item.status}
-                      onChange={() => toggleStatus(item.id)}
-                      color="primary"
-                    />
-                    <Typography
-                      variant="body2"
-                      ml={1}
-                      color={item.status ? 'green' : 'red'}
-                    >
-                      {item.status ? 'Active' : 'Inactive'}
-                    </Typography>
-                  </div>
-                </TableCell>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "whitesmoke",
+              borderRadius: "8px",
+              padding: "8px",
+            }}
+          >
+            <Switch
+              checked={index === selectedIndex ? !isActive : isActive}
+              onChange={() => handleSwitchChange(index)}
+              classes={{
+                checked:
+                  index === selectedIndex
+                    ? !isActive
+                      ? "green"
+                      : "error"
+                    : isActive
+                    ? "green"
+                    : "error",
+                track:
+                  index === selectedIndex
+                    ? !isActive
+                      ? "success"
+                      : "redColor"
+                    : isActive
+                    ? "success"
+                    : "redColor",
+              }}
+            />
+            <Typography
+              variant="body2"
+              ml={1}
+              color={
+                index === selectedIndex
+                  ? !isActive
+                    ? "success"
+                    : "error"
+                  : isActive
+                  ? "success"
+                  : "error"
+              }
+              className={
+                index === selectedIndex
+                  ? !isActive
+                    ? "greenColor"
+                    : "redColor"
+                  : isActive
+                  ? "greenColor"
+                  : "redColor"
+              }
+            >
+              {index === selectedIndex
+                ? !isActive
+                  ? "Active"
+                  : "Inactive"
+                : isActive
+                ? "Active"
+                : "Inactive"}
+            </Typography>
+          </div>
+        </TableCell>  
+               
                 <TableCell>
                   <IconButton sx={{ background: 'gray', borderRadius: '0px' }}>
                     <RemoveRedEyeIcon />

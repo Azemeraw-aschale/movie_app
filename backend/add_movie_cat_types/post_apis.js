@@ -61,7 +61,9 @@ router.post('/api/movies', async (req, res) => {
   try {
     const { title, duration, description, channelId, typeId, categoryId, videourl } = req.body;
     // console.log("ppapapapapapa", req.body)
-     console.log("ppapapapapapa", req.body.videourl)
+
+     console.log("ppapapapapapa", req.body.channelId)
+
 
     const movie = await prisma.movies.create({
       data: {

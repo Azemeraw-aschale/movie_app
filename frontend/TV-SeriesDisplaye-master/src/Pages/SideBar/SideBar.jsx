@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { DashboardOutlined, YoutubeSearchedForSharp, Person2TwoTone } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import Image from './logo.PNG';
 
 function Sidebar() {
   return (
@@ -13,7 +14,7 @@ function Sidebar() {
     }}>
       {/* Company Logo and Name */}
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2, ml: 5 }}>
-        <img src="company-logo.png" alt="Company Logo" width={60} height={60} />
+        <img src={Image} alt="Company Logo" width={60} height={60} />
         <Typography variant="h6" fontWeight="bold" sx={{ mt: 1 }}>
           Company Name
         </Typography>
@@ -22,7 +23,7 @@ function Sidebar() {
 
       <List>
         <ListItem disablePadding>
-          <ListItemButton sx={{ '&:hover': { bgcolor: 'primary.light' } }} component={Link} to="/">
+          <ListItemButton sx={{ '&:hover': { bgcolor: 'primary.light' } }} component={Link} to="/Home">
             <ListItemIcon>
               <DashboardOutlined />
             </ListItemIcon>

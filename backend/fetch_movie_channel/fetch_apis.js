@@ -70,6 +70,48 @@ router.get('/api/movies', async (req, res) => {
     }
   });
 
+
+  router.get('/api/movies/search', async (req, res) => {
+    const { query } = req.query;
+  
+    try {
+      const movies = await prisma.movies.findMany({
+        where: {
+          OR: [
+            { title: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } },
+          ],
+        },
+      });
+  
+      res.json(movies);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  });
+
+
+  router.get('/api/movies/filter', async (req, res) => {
+    const { category, duration } = req.query;
+  
+    try {
+      const movies = await prisma.movies.findMany({
+        where: {
+          categories: { some: { id: parseInt(category) } },
+          duration: { gte: parseInt(duration) },
+        },
+      });
+  
+      res.json(movies);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  });
+
+
+
 router.get('/api/channels/:id' , async (req,res)=> {
 try {
     
@@ -90,5 +132,45 @@ try {
     res.status(500).json({ error: 'An error occurred while fetching the channel.' });
     
 }
+});
+router.get('/api/mov/count', async (req, res) => {
+  try {
+    // Fetch the count of movies
+    const moviesCount = await prisma.movies.count();
+
+    console.log("Movies count:", moviesCount);
+
+    // Return the count as the response
+    res.json({ count: moviesCount });
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching movie count:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/api/users/count', async (req, res) => {
+  try {
+    // Retrieve the count of programs from the database
+    const userCount = await prisma.users_auth.count();
+    console.log("your user is  kkk",userCount)
+    // Return the count as the response
+    res.json({ count: userCount });
+  } catch (error) {
+    // Handle any errors
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+router.get('/api/chanals/count', async (req, res) => {
+  try {
+    // Retrieve the count of programs from the database
+    const chanalCount = await prisma.channels.count();
+    console.log("your chanals is kkkkk",chanalCount)
+    // Return the count as the response
+    res.json({ count: chanalCount });
+  } catch (error) {
+    // Handle any errors
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 module.exports = router;
