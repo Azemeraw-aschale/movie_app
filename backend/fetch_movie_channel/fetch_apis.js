@@ -70,6 +70,7 @@ router.get('/api/movies', async (req, res) => {
     }
   });
 
+
   router.get('/api/movies/search', async (req, res) => {
     const { query } = req.query;
   
@@ -108,6 +109,7 @@ router.get('/api/movies', async (req, res) => {
       res.status(500).json({ error: 'An error occurred' });
     }
   });
+
 
 
 router.get('/api/channels/:id' , async (req,res)=> {

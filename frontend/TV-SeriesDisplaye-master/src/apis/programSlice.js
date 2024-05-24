@@ -35,6 +35,21 @@ export const fetchProgram=createAsyncThunk(
      }
 });
 
+export const fetchCatagory=createAsyncThunk(
+  "fetch/program",
+  async ( page = 1 ) => {
+  try{
+      const res = await axios.get(`${APIURL}/catagories`);
+      console.log("the response from server catafdsjnfh is ",res.data,res.status);
+      return res.data;
+   } catch (error) {
+     return error.code;
+   }
+});
+
+
+
+
 export const deleteProgram = createAsyncThunk(
     "delete/program",
     async ({newData,id}) => {
@@ -74,6 +89,8 @@ export const updateProgram= createAsyncThunk(
      builder.addCase(fetchProgram.pending, (state, action) => {
       state.isLoading = true;
      })
+
+
      builder.addCase(fetchProgram.rejected, (state, action) => {
       state.isError = true;
      }).addCase(deleteProgram.fulfilled,(state,action) =>{

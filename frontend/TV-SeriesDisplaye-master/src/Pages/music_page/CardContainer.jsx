@@ -12,6 +12,7 @@ import ReactPlayer from 'react-player';
 
 const CardContainer = ({  autoplay = false}) => {
   const [cardIndex, setCardIndex] = useState(null);
+
   const [users, setUsers] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
   const cardListRef = useRef(null);
@@ -50,6 +51,7 @@ const CardContainer = ({  autoplay = false}) => {
   };
 
 
+
   const cards = [
     { id: 1, title: 'FOX', content: 'This is the content of Card 1.', videoUrl: 'https://www.youtube.com/shorts/12AjixuM9bM', icon: <SiFox/> },
     { id: 2, title: 'ABC TV', content: 'This is the content of Card 2.', videoUrl: 'https://www.youtube.com/embed/FHHKrf9Dpvs?si=osRhfgBnQdmqfy4e', icon: <MdOutlineAbc /> },
@@ -70,7 +72,9 @@ const CardContainer = ({  autoplay = false}) => {
   };
 
   useEffect(() => {
+
     fetchMovies()
+
     if (cardIndex !== null && cardListRef.current) {
       const cardList = cardListRef.current;
       const cardWidth = 240; // Adjusted width to fit 4 cards per window
@@ -155,7 +159,9 @@ const CardContainer = ({  autoplay = false}) => {
               
             }
           }}>
+
  <Box  onClick={() => handleCardClick(0)} sx={{cursor:'pointer'}}><SiFox/> Fox</Box>
+
             <Box  onClick={() => handleCardClick(1)} ><MdOutlineAbc /> ABC TV</Box>
             <Box onClick={() => handleCardClick(2)}><PiTelevisionSimpleFill /> MBC TV</Box>
             <Box onClick={() => handleCardClick(3)}><SiNbc /> NBC</Box>
@@ -165,9 +171,11 @@ const CardContainer = ({  autoplay = false}) => {
             <Box onClick={() => handleCardClick(7)}><FcBbc /> ESNP</Box>
             <Box onClick={() => handleCardClick(8)}><TbBrandDisney /> Disney</Box>
             <Box onClick={() => handleCardClick(9)}><SiCnn /> CNN</Box>
+
            </Box>
 
        
+
         </Grid>
         <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box className="media-player" sx={{

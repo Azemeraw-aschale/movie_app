@@ -51,7 +51,9 @@ const style = {
 
 
 
-const ChannelPage = (show,onClose) => {
+
+const ChannelPage = () => {
+
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const chanal = useSelector((state) => state.chanals.data);

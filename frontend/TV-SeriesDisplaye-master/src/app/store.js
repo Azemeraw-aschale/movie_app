@@ -5,10 +5,12 @@ import loginSlice from "../apis/loginSlice";
 import dashboardSlice from "../apis/dashboardSlice";
 import programSlice from "../apis/programSlice";
 import typesSlice from "../apis/typesSlice";
+
 import categorySlice from "../apis/categorySlice";
 import programcountSlice from "../apis/programSlice";
 import  fetchusersCountreducer from "../apis/userDashboardSlice";
 import fetchchanalCountreducer from "../apis/chanalcountSlice";
+
 
 
 // import todoReducer from "../api/mapSlice"
@@ -19,6 +21,7 @@ export const store = configureStore({
         programs:movieReducer,
         logins:loginSlice,
         dashboars:dashboardSlice,
+
         catagories:categorySlice,
         types:typesSlice,
         programcount:programcountSlice,

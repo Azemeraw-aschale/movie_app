@@ -21,7 +21,9 @@ export const fetchTypes=createAsyncThunk(
 
 
    const typesSlice = createSlice({
+
     name: "types",
+
     initialState: {
      isLoading: false,
      data: [],
@@ -31,6 +33,7 @@ export const fetchTypes=createAsyncThunk(
       
     },
     extraReducers: (builder) => {
+
      builder.addCase(fetchTypes.pending, (state, action) => {
       state.isLoading = true;
     })
@@ -41,6 +44,7 @@ export const fetchTypes=createAsyncThunk(
     .addCase(fetchTypes.rejected, (state, action) => {
       state.isError = true;
     })  
+
     }
    });
  
