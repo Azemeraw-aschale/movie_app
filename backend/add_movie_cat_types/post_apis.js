@@ -56,25 +56,32 @@ router.post('/api/types', async (req, res) => {
 });
 
 // Add a new movie
+
 router.post('/api/movies', async (req, res) => {
   try {
-    const { title, duration, description, channelId, typeId, categoryId, videoUrl } = req.body;
+    const { title, duration, description, channelId, typeId, categoryId, videourl } = req.body;
+    // console.log("ppapapapapapa", req.body)
+     console.log("ppapapapapapa", req.body.channelId)
 
     const movie = await prisma.movies.create({
       data: {
-        title,
-        duration,
-        description,
-        channelId,
-        typeId,
-        categoryId,
-        videoUrl,
-      },
-      include: {
-        channels: true,
-        types: true,
-        categories: true,
-      },
+        title: title,
+        duration: duration,
+        description: description,
+       
+        channels: {
+          connect: { id: channelId } // Connects the movie to an existing channel with ID 1
+        },
+        types: {
+          connect: { id: typeId } // Connects the movie to an existing type with ID 1
+        },
+        categories: {
+          connect: { id: categoryId} // Connects the movie to an existing category with ID 1
+        },
+        videourl:videourl,
+        // dd:videoUrl
+      }
+    
     });
 
     res.status(200).json({ message: 'Movie inserted successfully', movie });
@@ -83,5 +90,4 @@ router.post('/api/movies', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding the movie.' });
   }
 });
-
 module.exports = router;

@@ -14,6 +14,12 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  display:{
+    xs:'flex',
+    sm:'block'
+  },
+  justigyContent:'center',
+  alignItems:'center',
 };
 
 export default function ChanalModal() {

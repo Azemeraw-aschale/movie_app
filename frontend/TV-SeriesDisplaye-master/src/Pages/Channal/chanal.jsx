@@ -17,7 +17,6 @@ import {
   TextField,
   Stack,
   Button,
-
 } from '@mui/material';
 // import { withStyles } from '@material-ui/core/styles';
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -25,7 +24,7 @@ import SideBar from '../SideBar/SideBar';
 import NavBar from '../AppBar/NavBar'; // Import the NavBar component
 import Modal from '@mui/material/Modal';
 import { light } from '@mui/material/styles/createPalette'
-import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material'
+import { Add, Filter, ImportExport, Person2TwoTone, PieChart, Search } from '@mui/icons-material'
 import { addChannal, fetchChanal, deleteChanal, updateChanal } from '../../apis/chanalSlice';
 import TablePagination from '@mui/material/TablePagination';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -48,15 +47,22 @@ const style = {
   p: 4,
 };
 
-const ChannelPage = () => {
+
+
+
+
+const ChannelPage = (show,onClose) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const chanal = useSelector((state) => state.chanals.data);
+  const [users, setUsers] = useState([]);
 
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
   const [data, setData] = useState(null);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -96,7 +102,14 @@ const ChannelPage = () => {
   useEffect(() => {
     dispatch(fetchChanal());
   }, [dispatch]);
-
+  const [isActive, setIsActive] = useState(false);
+  // const handleSwitchChange = () => {
+  //   setIsActive(!isActive);
+  // };
+  const handleSwitchChange = (index) => {
+    setSelectedIndex(index);
+    setIsActive((prevState) => !prevState);
+  };
 
 
   const [formData, setFormData] = useState({
@@ -113,6 +126,7 @@ const ChannelPage = () => {
       )
     );
   };
+  
   const paginatedChannels = sortedChannels.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -161,10 +175,20 @@ const ChannelPage = () => {
       await dispatch(fetchChanal());
     }
   };
+  // const [showSidebar, setShowSidebar] = useState(false);   
+  //  const toggleSidebar = () => {
+  //   setShowSidebar(!showSidebar);
+  // };
   return (
     <div style={{ display: 'flex' }}>
+      {/* <NavBar>
+        <IconButton onClick={toggleSidebar}>
+          <MenuIcon />
+        </IconButton>
+    </NavBar> */}
       
-      <SideBar/>
+        <SideBar/>
+      
       <div style={{ flex: '1' }}>
         <NavBar /> {/* Include the NavBar component */}
         <Modal
@@ -214,7 +238,7 @@ const ChannelPage = () => {
               bgcolor="lightgrey"
               borderRadius={2}
             >
-              <IconButton>
+              <IconButton >
                 <Search />
               </IconButton>
               <InputBase
@@ -253,25 +277,74 @@ const ChannelPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedChannels.map((item) => (
+            {paginatedChannels.map((item,index) => (
               <TableRow key={item.id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Switch
-                      checked={item.status}
-                      onChange={() => toggleStatus(item.id)}
-                      color="primary"
-                    />
-                    <Typography
-                      variant="body2"
-                      ml={1}
-                      color={item.status ? 'green' : 'red'}
-                    >
-                      {item.status ? 'Active' : 'Inactive'}
-                    </Typography>
-                  </div>
-                </TableCell>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "whitesmoke",
+              borderRadius: "8px",
+              padding: "8px",
+            }}
+          >
+            <Switch
+              checked={index === selectedIndex ? !isActive : isActive}
+              onChange={() => handleSwitchChange(index)}
+              classes={{
+                checked:
+                  index === selectedIndex
+                    ? !isActive
+                      ? "green"
+                      : "error"
+                    : isActive
+                    ? "green"
+                    : "error",
+                track:
+                  index === selectedIndex
+                    ? !isActive
+                      ? "success"
+                      : "redColor"
+                    : isActive
+                    ? "success"
+                    : "redColor",
+              }}
+            />
+            <Typography
+              variant="body2"
+              ml={1}
+              color={
+                index === selectedIndex
+                  ? !isActive
+                    ? "success"
+                    : "error"
+                  : isActive
+                  ? "success"
+                  : "error"
+              }
+              className={
+                index === selectedIndex
+                  ? !isActive
+                    ? "greenColor"
+                    : "redColor"
+                  : isActive
+                  ? "greenColor"
+                  : "redColor"
+              }
+            >
+              {index === selectedIndex
+                ? !isActive
+                  ? "Active"
+                  : "Inactive"
+                : isActive
+                ? "Active"
+                : "Inactive"}
+            </Typography>
+          </div>
+        </TableCell>  
+               
                 <TableCell>
                   <IconButton sx={{ background: 'gray', borderRadius: '0px' }}>
                     <RemoveRedEyeIcon />
@@ -297,6 +370,7 @@ const ChannelPage = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
           </TableContainer>
+          
         </Box>
       </div>
     </div>

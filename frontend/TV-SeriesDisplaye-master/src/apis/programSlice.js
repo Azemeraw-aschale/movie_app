@@ -1,7 +1,7 @@
 import { Try } from "@mui/icons-material";
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const APIURL = "http://yene.tewostechsolutions.com/api";
+const APIURL = "http://localhost:8080/api";
 
 export const addProgram=createAsyncThunk
 (    
@@ -34,6 +34,7 @@ export const fetchProgram=createAsyncThunk(
        return error.code;
      }
 });
+
 export const deleteProgram = createAsyncThunk(
     "delete/program",
     async ({newData,id}) => {
@@ -72,11 +73,6 @@ export const updateProgram= createAsyncThunk(
     extraReducers: (builder) => {
      builder.addCase(fetchProgram.pending, (state, action) => {
       state.isLoading = true;
-     })
-     builder.addCase(fetchProgram.fulfilled, (state, action) => {
-      state.isLoading = false;
-    //   state.data = action.payload;
-      state.data = action.payload.data.chanals
      })
      builder.addCase(fetchProgram.rejected, (state, action) => {
       state.isError = true;

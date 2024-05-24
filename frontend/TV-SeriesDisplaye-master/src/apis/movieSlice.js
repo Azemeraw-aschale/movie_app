@@ -80,7 +80,7 @@ const movieSlice = createSlice({
       })
       .addCase(fetchMovie.rejected, (state, action) => {
         state.isError = true;
-      })
+      })  
       .addCase(deleteMovie.fulfilled, (state, action) => {
         state.isLoading = false;
         state.deleteStatus = "success";

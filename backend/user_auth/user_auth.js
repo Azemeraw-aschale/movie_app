@@ -7,19 +7,16 @@ const crypto = require('crypto');
 
 const router = express.Router();
 
-// createTables();
-// User Registration
 const secretKey = crypto.randomBytes(64).toString('hex');
 
 router.post('/api/register', async (req, res) => {
   try {
-    const { username, phone_number, email, password } = req.body;
+    const { username, phone_numer, email, password } = req.body;
 
     // Check if the user already exists in the database
-    const checkUserQuery = 'SELECT * FROM users_auth WHERE email = $1;';
-    const checkUserResult = await prisma.query(checkUserQuery, [email]);
+    const existingUser = await prisma.users_auth.findFirst({ where: { email } });
 
-    if (checkUserResult.rows.length > 0) {
+    if (existingUser) {
       return res.status(409).json({ error: 'User already exists.' });
     }
 
@@ -28,13 +25,16 @@ router.post('/api/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Insert the new user into the database
-    const insertUserQuery =
-      'INSERT INTO users_auth (username, phone_numer, email, password) VALUES ($1, $2, $3, $4) RETURNING id;';
-    const insertUserValues = [username, phone_number, email, hashedPassword];
-    const insertUserResult = await prisma.query(insertUserQuery, insertUserValues);
+    const newUser = await prisma.users_auth.create({
+      data: {
+        username,
+        phone_numer,
+        email,
+        password: hashedPassword,
+      },
+    });
 
-    const userId = insertUserResult.rows[0].id;
-    // console.log(userId)
+    const userId = newUser.id;
     res.status(201).json({ message: 'User registered successfully', userId });
   } catch (error) {
     console.error('Error registering user:', error);
@@ -46,15 +46,13 @@ router.post('/api/register', async (req, res) => {
 router.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Check if the user exists in the database
-    const checkUserQuery = 'SELECT * FROM users_auth WHERE email = $1;';
-    const checkUserResult = await prisma.query(checkUserQuery, [email]);
 
-    if (checkUserResult.rows.length === 0) {
+    // Check if the user exists in the database
+    const user = await prisma.users_auth.findFirst({ where: { email } });
+
+    if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
-
-    const user = checkUserResult.rows[0];
 
     // Compare the provided password with the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -66,6 +64,7 @@ router.post('/api/login', async (req, res) => {
     // Generate a JSON Web Token (JWT) for authentication
     const token = jwt.sign({ userId: user.id }, secretKey);
 
+    
     res.status(200).json({ message: 'Login successful', token });
   } catch (error) {
     console.error('Error logging in:', error);

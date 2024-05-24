@@ -2,6 +2,7 @@ import { Notifications } from '@mui/icons-material';
 import { Avatar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import ListIcon from '@mui/icons-material/List';
 
 function NavBar() {
   const location = useLocation();
@@ -28,12 +29,12 @@ function NavBar() {
         p={2}
         bgcolor="black"
         color="white"
-        
       >
-        <Box>
+        <Box >
           <Typography variant="h6">{getTitle()}</Typography>
         </Box>
-        <Box alignItems="center" display="flex" justifyContent="space-between">
+        
+        <Box >
           <Box>
             <Typography>
               <IconButton>
@@ -42,10 +43,11 @@ function NavBar() {
             </Typography>
           </Box>
           <Box>
-            <Avatar></Avatar>
+            <Avatar />
           </Box>
         </Box>
       </Box>
+      <Toolbar /> {/* Add a toolbar to push content below the fixed navbar */}
     </>
   );
 }
