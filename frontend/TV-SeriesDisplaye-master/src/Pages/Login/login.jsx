@@ -33,10 +33,11 @@ function Login() {
       } else {
         // Display an error message
         console.error('Error logging in:', response.data.error);
-        navigate('/Home');
+        // navigate('/Home');
       }
     })
     .catch((error) => {
+      navigate('/Home');
       console.error('Error logging in:', error);
     });
   };
