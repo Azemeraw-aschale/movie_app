@@ -1,1 +1,57 @@
+name: Node.js CI/CD
 
+on:
+  push:
+    branches: [main]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm ci
+        
+    - name: Run tests
+      run: npm test
+        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm ci
+        
+    - name: Build application
+      run: npm run build
+        
+    - name: Deploy to cPanel
+      env:
+        CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+        CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+        CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
+      run: |
+        # Install the cPanel CLI tool
+        npm install -g cpanel-node
+        
+        # Deploy the application
+        cpanel-node deploy \
+          --host $CPANEL_HOST \
+          --username $CPANEL_USERNAME \
+          --password $CPANEL_PASSWORD \
+          --path /public_html/myapp \
+          --files dist/*
