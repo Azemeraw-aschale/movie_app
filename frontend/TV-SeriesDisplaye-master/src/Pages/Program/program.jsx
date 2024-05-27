@@ -169,8 +169,7 @@ const Program = ({ show, onClose }) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
     setErrors({ ...errors, [event.target.name]: false });
   };
-  const handleSubmit = async (event) => {
-    // console.log("this is ok one of ");
+ const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = { ...errors };
     const fields = [
@@ -182,19 +181,36 @@ const Program = ({ show, onClose }) => {
       "categori",
       "type",
     ];
-
+  
+    let hasErrors = false;
     fields.forEach((field) => {
-      if (!formData[field].trim()) {
+      if (typeof formData[field] === 'string' && !formData[field].trim()) {
         newErrors[field] = true;
+        hasErrors = true;
+      } else if (typeof formData[field] === 'number' && isNaN(formData[field])) {
+        newErrors[field] = true;
+        hasErrors = true;
+      } else if (typeof formData[field] === 'boolean' && formData[field] === false) {
+        newErrors[field] = true;
+        hasErrors = true;
+      } else if (Array.isArray(formData[field]) && formData[field].length === 0) {
+        newErrors[field] = true;
+        hasErrors = true;
+      } else if (formData[field] === null || formData[field] === undefined) {
+        newErrors[field] = true;
+        hasErrors = true;
+      } else {
+        newErrors[field] = false;
       }
     });
+  
     setErrors(newErrors);
-    // aa=formData.url;
-    // console.log("hhhhhhhhhhhhgghghghg", formData.desc);
-    // if (Object.values(newErrors).every((error) => !error)) {
-    //   console.log("hhhhhhhhhhhhhhh");
+  
+    if (hasErrors) {
+      return;
+    }
+  
     const dataContainer = {
-      // name: formData.name,
       videourl: formData.url,
       description: formData.desc,
       duration: parseInt(formData.duration, 10),
@@ -203,13 +219,18 @@ const Program = ({ show, onClose }) => {
       categoryId: 1,
       typeId: 1,
     };
+  
     console.log(dataContainer);
-
-    dispatch(addMovie(dataContainer));
-    window.alert("movie registered successfully!");
-    handleClose();
-    await dispatch(fetchMovie());
-    // }
+  
+    try {
+      await dispatch(addMovie(dataContainer));
+      window.alert("movie registered successfully!");
+      handleClose();
+      await dispatch(fetchMovie());
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Handle the error, e.g., display an error message
+    }
   };
 
   const [isActive, setIsActive] = useState(false);
