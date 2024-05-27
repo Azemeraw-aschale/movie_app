@@ -39,15 +39,11 @@ jobs:
 
     - name: Deploy to cPanel
       env:
-        CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-        CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
-        CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
+         CPANEL_HOST: ${{ secrets.FTP_Server }}
+         CPANEL_USERNAME: ${{ secrets.FTP_Username }}
+         CPANEL_PASSWORD: ${{ secrets.ftp_password }}
       run: |
         # Install the cPanel CLI tool
-        npm install -g cpanel-node
-        
-        # Deploy the application
-        cpanel-node deploy \
           --host $CPANEL_HOST \
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
