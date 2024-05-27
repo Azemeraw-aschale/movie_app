@@ -20,7 +20,7 @@ function Login() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios.post("http://localhost:8080/api/login", {
+    axios.post("https://movie-app-lumh.onrender.com/api/login", {
       email: data.get("email"),
       password: data.get("password"),
     })
