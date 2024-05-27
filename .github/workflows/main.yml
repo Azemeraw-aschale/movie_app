@@ -1,9 +1,3 @@
-name: Node.js CI/CD
-
-on:
-  push:
-    branches: [main]
-
 jobs:
 
   build:
@@ -19,12 +13,22 @@ jobs:
     - name: Clear npm cache
       run: npm cache clean --force
 
-    - name: Install dependencies
+    - name: Install frontend dependencies
+      working-directory: ./frontend
       run: npm ci
         
-    - name: Run tests
+    - name: Install backend dependencies
+      working-directory: ./backend  
+      run: npm ci
+        
+    - name: Run frontend tests
+      working-directory: ./frontend
       run: npm run test
         
+    - name: Run backend tests  
+      working-directory: ./backend
+      run: npm run test
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -39,10 +43,20 @@ jobs:
     - name: Clear npm cache
       run: npm cache clean --force
 
-    - name: Install dependencies
+    - name: Install frontend dependencies
+      working-directory: ./frontend
       run: npm ci
         
-    - name: Build application
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+        
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+        
+    - name: Build backend
+      working-directory: ./backend
       run: npm run build
         
     - name: Deploy to cPanel
@@ -60,4 +74,4 @@ jobs:
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
           --path /public_html/movie_app \
-          --files dist/*
+          --files frontend/dist/* backend/dist/*
