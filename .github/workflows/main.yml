@@ -26,24 +26,22 @@ jobs:
       run: |
         npm install
         npm ci
+        npm install --save-dev react-scripts
 
     - name: Install backend dependencies
       working-directory: ./backend
       run: |
         npm install
         npm ci
+        npm install --save-dev react-scripts
 
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
-      run: |
-        npm run build
-        npx react-scripts build
+      run: npm run build
 
     - name: Build backend
       working-directory: ./backend
-      run: |
-        npm run build
-        npx react-scripts build
+      run: npm run build
 
     - name: Deploy to cPanel
       env:
