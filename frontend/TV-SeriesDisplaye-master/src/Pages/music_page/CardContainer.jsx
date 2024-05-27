@@ -13,10 +13,10 @@ import ReactPlayer from 'react-player';
 const CardContainer = ({  autoplay = false}) => {
   const [cardIndex, setCardIndex] = useState(null);
 
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
   const cardListRef = useRef(null);
-  const [movies, setMovies] = useState([]);
+  const ["", setMovies] = useState([]);
 
   const fetchMovies = () => {
     fetch("http://localhost:8080/api/movies")
