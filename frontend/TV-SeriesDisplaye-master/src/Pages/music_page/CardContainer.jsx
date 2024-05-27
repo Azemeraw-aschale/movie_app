@@ -19,7 +19,7 @@ const CardContainer = ({  autoplay = false}) => {
   const ["", setMovies] = useState([]);
 
   const fetchMovies = () => {
-    fetch("http://localhost:8080/api/movies")
+    fetch("https://movie-app-lumh.onrender.com/api/movies")
       .then((response) => response.json())
       .then((data) => {
         console.log("Movies data:", data);
