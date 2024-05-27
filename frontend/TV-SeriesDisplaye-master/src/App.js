@@ -6,7 +6,7 @@ import Channel from './Pages/Channal/chanal';
 import Program from './Pages/Program/program';
 import Home from './HomePage';
 import Login from './Pages/Login/login'
-import CardContainer from './Pages/music_page/CardContainer';
+
 
 const App = () => {
   return (
