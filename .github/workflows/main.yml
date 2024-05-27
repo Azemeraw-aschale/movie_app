@@ -18,12 +18,12 @@ jobs:
 
       - name: Install dependencies (frontend)
         run: |
-          cd frontend
+          cd frontend/TV-SeriesDisplaye-master
           npm ci
 
       - name: Build frontend
         run: |
-          cd frontend
+          cd frontend/tv-program
           npm run build
 
       - name: Install dependencies (backend)
@@ -41,21 +41,19 @@ jobs:
           SSH_HOST: ${{ secrets.FTP_HOST }}
           SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
           SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          # REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
         run: |
           # Install SSH client
           apt-get update && apt-get install -y openssh-client
 
           # Deploy frontend
-          scp -r ./frontend/dist/* $SSH_USERNAME@$SSH_HOST:$REMOTE_PATH/frontend/
-
+          scp -r ./frontend/tv-program/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/frontend/
           # Deploy backend
-          scp -r ./backend/dist/* $SSH_USERNAME@$SSH_HOST:$REMOTE_PATH/backend/
+          scp -r ./backend/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/backend/
 
           # Connect to server and restart the application
           ssh $SSH_USERNAME@$SSH_HOST <<EOF
             # Navigate to the application directory
-            cd $REMOTE_PATH
+            cd /var/www/my-app
 
             # Restart the backend service
             pm2 restart backend
