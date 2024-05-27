@@ -38,11 +38,11 @@ jobs:
       run: |
         npm run build
 
-    - name: Start backend
-      working-directory: ./backend
+    - name: Build frontend
+      working-directory: ./frontend/TV-SeriesDisplaye-master
       run: |
-        npm start
-        
+        npm run build
+
     - name: Deploy to cPanel
       env:
         CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
