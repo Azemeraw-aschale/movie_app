@@ -37,9 +37,8 @@ jobs:
       working-directory: ./backend
       run: |
         npm run build
-        npm run build:prod
-        npm install --save-dev react-scripts
-
+        npm run start
+        
     - name: Deploy to cPanel
       env:
         CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
