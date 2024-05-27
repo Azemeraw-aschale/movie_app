@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 // import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,13 +20,12 @@ import {
   Button,
 } from '@mui/material';
 // import { withStyles } from '@material-ui/core/styles';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import SideBar from '../SideBar/SideBar';
 import NavBar from '../AppBar/NavBar'; // Import the NavBar component
 import Modal from '@mui/material/Modal';
 import { light } from '@mui/material/styles/createPalette'
-import { Add, Filter, ImportExport, Person2TwoTone, PieChart, Search } from '@mui/icons-material'
-import { addChannal, fetchChanal, deleteChanal, updateChanal } from '../../apis/chanalSlice';
+import { Filter, ImportExport, Search } from '@mui/icons-material'
+import { addChannal, fetchChanal, deleteChanal} from '../../apis/chanalSlice';
 import TablePagination from '@mui/material/TablePagination';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
@@ -57,13 +57,12 @@ const ChannelPage = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const chanal = useSelector((state) => state.chanals.data);
-  const [users, setUsers] = useState([]);
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
-  const [data, setData] = useState(null);
+  const [setData] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -118,27 +117,19 @@ const ChannelPage = () => {
     name: '',
     
   });
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
-
-  const toggleStatus = (id) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.id === id ? { ...item, status: !item.status } : item
-      )
-    );
-  };
   
   const paginatedChannels = sortedChannels.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
   const handleEdit = (id) => {
-    console.log(`Editing item with ID: ${id}`);
+    console.log(Editing item with ID: ${id});
   };
 
-  const handleDelete = (chaid) => {
-    console.log(`Deleting item with ID: ${chaid}`);
+
+const handleDelete = (chaid) => {
+    console.log(Deleting item with ID: ${chaid});
     const userConfirmation = window.confirm("Are you sure you want to delete channel?");
     if (userConfirmation) {
       console.log("id for delete is:", chaid);
@@ -224,7 +215,8 @@ const ChannelPage = () => {
           </Box>
         </Modal>
 
-        <Box margin={2} bgcolor={light}>
+
+<Box margin={2} bgcolor={light}>
           <Box
             flexGrow={1}
             p={1}
@@ -351,7 +343,9 @@ const ChannelPage = () => {
                   <IconButton sx={{ background: 'gray', borderRadius: '0px' }}>
                     <RemoveRedEyeIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleEdit(item.id)}>
+
+
+<IconButton onClick={() => handleEdit(item.id)}>
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => handleDelete(item.id)} color='red'>
