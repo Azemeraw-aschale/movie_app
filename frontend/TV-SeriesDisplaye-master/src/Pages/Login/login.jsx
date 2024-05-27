@@ -31,12 +31,13 @@ function Login() {
         navigate('/Home');
       } else {
         // Display an error message
-        console.error('Error logging in:', response.data.error);
         navigate('/CardContainer');
+        console.error('Error logging in:', response.data.error);
+        
       }
     })
     .catch((error) => {
-      //navigate('/CardContainer');
+      navigate('/CardContainer');
       console.error('Error logging in:', error);
     });
   };
