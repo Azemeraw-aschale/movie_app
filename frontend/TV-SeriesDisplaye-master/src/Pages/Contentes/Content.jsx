@@ -1,12 +1,11 @@
 
-import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
-import { Add, Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material';
+import { Box, Button, Card, Typography } from '@mui/material';
+import {  Filter, ImportExport, Person2TwoTone, Search } from '@mui/icons-material';
 import { IconButton, InputBase } from '@mui/material';
-import Modal from '@mui/material/Modal';
-import React,{useEffect,useState} from 'react';
+import React,{useEffect} from 'react';
 import { light } from '@mui/material/styles/createPalette';
 import { useDispatch,useSelector } from 'react-redux';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer,Label} from 'recharts';
+import { PieChart, Pie, Cell,Label} from 'recharts';
 import { fetchPieChart,fetchChanal,fetchMovie,fetchLineChart,fetchUser } from '../../apis/dashboardSlice';
 // import { fetchchanalCount } from '../../apis/chanalcountSlice';
 import { fetchmoviesCount } from '../../apis/programDashboardSlice';
@@ -16,24 +15,7 @@ import { fetchUsersCount } from '../../apis/userDashboardSlice';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import { fetchchanalCount } from '../../apis/chanalcountSlice';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '70%',
-  height: '50%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  borderRadius: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  p: 4,
-};
 
 // Define the data for the pie chart
 const onPieEnter = (data, index) => {
@@ -41,22 +23,17 @@ const onPieEnter = (data, index) => {
   console.log('Pie entered:', data, index);
 };
 
-const data = [
-  { name: 'A', value: 100 },
-  { name: 'B', value: 200 },
-  { name: 'C', value: 300 },
-  { name: 'D', value: 400 },
-];
-const size = {
-  width: 400,
-  height: 200,
-};
+
+// const size = {
+//   width: 400,
+//   height: 200,
+// };
 
 function Content() {
-  const [open, setOpen] = React.useState(false);
+  const [ setOpen] = React.useState(false);
   const dispatch=useDispatch();
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const handleClose = () => setOpen(false);
   const { usersCount, isLoading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
