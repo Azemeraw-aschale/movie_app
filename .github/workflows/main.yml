@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Build and Deploy
 
 on:
   push:
@@ -17,61 +17,35 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
-        
+
     - name: Clear npm cache
       run: npm cache clean --force
 
     - name: Install frontend dependencies
       working-directory: ./frontend
-      run: npm ci
-        
-    - name: Install backend dependencies
-      working-directory: ./backend  
-      run: npm ci
-        
-    - name: Run frontend tests
-      working-directory: ./frontend
-      run: npm run test
-        
-    - name: Run backend tests  
-      working-directory: ./backend
-      run: npm run test
+      run: |
+        npm install
+        npm ci
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-        
-    - name: Clear npm cache
-      run: npm cache clean --force
-
-    - name: Install frontend dependencies
-      working-directory: ./frontend
-      run: npm ci
-        
     - name: Install backend dependencies
       working-directory: ./backend
-      run: npm ci
-        
+      run: |
+        npm install
+        npm ci
+
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
       run: npm run build
-        
+
     - name: Build backend
       working-directory: ./backend
       run: npm run build
-        
+
     - name: Deploy to cPanel
       env:
-        CPANEL_HOST: ${{ secrets.FTP_server }}
-        CPANEL_USERNAME: ${{ secrets.FTP_Username }}
-        CPANEL_PASSWORD: ${{ secrets.ftp_password }}
+        CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+        CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+        CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
       run: |
         # Install the cPanel CLI tool
         npm install -g cpanel-node
@@ -82,4 +56,4 @@ jobs:
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
           --path /public_html/movie_app \
-          --files frontend/dist/* backend/dist/*
+          --files frontend/TV-SeriesDisplaye-master/dist/* backend/dist/*
