@@ -15,28 +15,28 @@ import {
   Stack,
   Button,
   InputBase,
-  NativeSelect,
-  FormControl,
-  InputLabel,
+  // NativeSelect,
+  // FormControl,
+  // InputLabel,
   MenuItem,
   Select,
-  TextareaAutosize,
+  // TextareaAutosize,
 } from "@mui/material";
-import { FaEdit, FaTrash } from "react-icons/fa";
+// import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { light } from "@mui/material/styles/createPalette";
 import { Filter, ImportExport, Search } from "@mui/icons-material";
 import SideBar from "../SideBar/SideBar";
 import NavBar from "../AppBar/NavBar";
 import {
-  addChannal,
+  // addChannal,
   fetchChanal,
-  deleteChanal,
-  updateChanal,
+  
+  
 } from "../../apis/chanalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addMovie, deleteMovie, fetchMovie } from "../../apis/movieSlice";
-import { fetchCatagory } from "../../apis/categorySlice";
+// import { fetchCatagory } from "../../apis/categorySlice";
 import { fetchTypes } from "../../apis/typesSlice";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
@@ -56,12 +56,12 @@ const style = {
   flexDirection: "column",
   alignItems: "center",
   p: 4,
-  display: {
-    xs: "flex",
-    sm: "block",
-  },
+  // display: {
+  //   xs: "flex",
+  //   sm: "block",
+  // },
   justigyContent: "center",
-  alignItems: "center",
+  // alignItems: "center",
 };
 
 const Program = ({ show, onClose }) => {
@@ -113,7 +113,7 @@ const Program = ({ show, onClose }) => {
   console.log("movies data", movies);
   console.log("mnmnmnmnm", prog_data);
 
-  const [data, setData] = useState([
+  const ["", setData] = useState([
     {
       id: 3,
       title: "Bob Johnson",
@@ -148,21 +148,21 @@ const Program = ({ show, onClose }) => {
 
   // Inside your component
   const [formData, setFormData] = useState(initialFormData);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const [age, setAge] = useState("");
+  // const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  // const [age, setAge] = useState("");
 
   // Handle change event of channel select
   // const handleChange = (event) => {
   //   const selectedAge = event.target.value;
   //   setAge(selectedAge);
   // };
-  const toggleStatus = (id) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.id === id ? { ...item, status: !item.status } : item
-      )
-    );
-  };
+  // const toggleStatus = (id) => {
+  //   setData((prevData) =>
+  //     prevData.map((item) =>
+  //       item.id === id ? { ...item, status: !item.status } : item
+  //     )
+  //   );
+  // };
 
   const handleEdit = (id) => {
     console.log(`Editing item with ID: ${id}`);
