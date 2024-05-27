@@ -3,7 +3,6 @@ import chanalReducer from "../apis/chanalSlice";
 import movieReducer from "../apis/movieSlice"
 import loginSlice from "../apis/loginSlice";
 import dashboardSlice from "../apis/dashboardSlice";
-import programSlice from "../apis/programSlice";
 import typesSlice from "../apis/typesSlice";
 
 import categorySlice from "../apis/categorySlice";
