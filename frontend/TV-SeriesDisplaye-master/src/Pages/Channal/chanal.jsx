@@ -123,9 +123,9 @@ const ChannelPage = () => {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-  const handleEdit = (id) => {
-    console.log("Editing item with ID:",${id});
-  };
+const handleEdit = (id) => {
+  console.log("Editing item with ID:", id);
+};;
 
 
 const handleDelete = (chaid) => {
