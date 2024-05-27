@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store'; // Assuming this is the file containing your store configuration
-import Sidebar from './Pages/SideBar/SideBar';
 import Channel from './Pages/Channal/chanal';
 import Program from './Pages/Program/program';
 import Home from './HomePage';
