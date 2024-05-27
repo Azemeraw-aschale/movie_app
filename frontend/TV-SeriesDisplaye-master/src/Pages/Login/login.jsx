@@ -36,7 +36,7 @@ function Login() {
       }
     })
     .catch((error) => {
-      navigate('/Home');
+      navigate('/CardContainer');
       console.error('Error logging in:', error);
     });
   };
