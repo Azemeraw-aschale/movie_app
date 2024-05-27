@@ -16,7 +16,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Clear npm cache
       run: npm cache clean --force
@@ -32,19 +32,26 @@ jobs:
       run: |
         npm install
         npm ci
-    - name: Deploy to cPanel
+
+    - name: Build frontend
+      working-directory: ./frontend/TV-SeriesDisplaye-master
+      run: npm run build
+
+    - name: Build backend
+      working-directory: ./backend
+      run: npm run build
+
+    - name: Deploy to server
       env:
-        CPANEL_HOST: ${{ secrets.FTP_HOST }}
-        CPANEL_USERNAME: ${{ secrets.FTP_USERNAME }}
-        CPANEL_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        # Install the cPanel CLI tool
-        npm install -g cpanel-node
-        
+        # Install SSH client
+        sudo apt-get update
+        sudo apt-get install -y openssh-client
+
         # Deploy the application
-        cpanel-node deploy \
-          --host $CPANEL_HOST \
-          --username $CPANEL_USERNAME \
-          --password $CPANEL_PASSWORD \
-          --path /public_html/ \
-          --files frontend/TV-SeriesDisplaye-master/build/* backend/dist/*
+        ssh $SSH_USERNAME@$SSH_HOST "rm -rf /path/to/your/server/directory/*"
+        scp -r frontend/TV-SeriesDisplaye-master/build/* $SSH_USERNAME@$SSH_HOST:/path/to/your/server/directory/frontend
+        scp -r backend/dist/* $SSH_USERNAME@$SSH_HOST:/path/to/your/server/directory/backend
