@@ -32,10 +32,12 @@ jobs:
       run: |
         npm install
         npm ci
+
     - name: Start backend
       working-directory: ./backend
       run: |
         npm start
+
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
       run: |
@@ -57,3 +59,11 @@ jobs:
           --password $CPANEL_PASSWORD \
           --path /public_html/ \
           --files frontend/TV-SeriesDisplaye-master/build/* backend/dist/*
+        
+        # Check the deployment status
+        if [ $? -ne 0 ]; then
+          echo "Deployment failed. Exiting with error."
+          exit 1
+        else
+          echo "Deployment successful."
+        fi
