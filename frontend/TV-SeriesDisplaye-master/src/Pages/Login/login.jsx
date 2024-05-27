@@ -37,7 +37,7 @@ function Login() {
       }
     })
     .catch((error) => {
-      // navigate('/CardContainer');
+      navigate('/CardContainer');
       console.error('Error logging in:', error);
     });
   };
