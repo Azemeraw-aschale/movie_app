@@ -71,7 +71,7 @@ const Program = ({ show, onClose }) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const fetchCatagory = () => {
-    fetch("http://localhost:8080/api/catagories")
+    fetch("https://movie-app-lumh.onrender.com/api/catagories")
       .then((response) => {
         return response.json();
       })
