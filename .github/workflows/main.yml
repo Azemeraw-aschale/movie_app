@@ -33,7 +33,6 @@ jobs:
       run: |
         npm install
         npm ci
-        npm install --save-dev react-scripts
 
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
@@ -58,4 +57,4 @@ jobs:
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
           --path /public_html/ \
-          --files frontend/TV-SeriesDisplaye-master/dist/* backend/dist/*
+          --files frontend/TV-SeriesDisplaye-master/build/* backend/dist/*
