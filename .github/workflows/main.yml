@@ -1,59 +1,73 @@
-name: Build and Deploy
-
+name: Deploy React and Node.js Project on push
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    branches:
+      - main
 jobs:
-
-  build:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+      - name: Get the latest code
+        uses: actions/checkout@v2.3.2
 
-    - name: Clear npm cache
-      run: npm cache clean --force
+      - name: Use Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: '14'
 
-    - name: Install frontend dependencies
-      working-directory: ./frontend/TV-SeriesDisplaye-master
-      run: |
-        npm install
-        npm ci
+      - name: Install dependencies (frontend)
+        run: |
+          cd frontend
+          npm ci
 
-    - name: Install backend dependencies
-      working-directory: ./backend
-      run: |
-        npm install
-        npm ci
-    - name: Build frontend
-      working-directory: ./frontend/TV-SeriesDisplaye-master
-      run: |
-        npm run build
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
 
-    - name: Deploy to cPanel
-      env:
-         CPANEL_HOST: ${{ secrets.FTP_Server }}
-         CPANEL_USERNAME: ${{ secrets.FTP_Username }}
-         CPANEL_PASSWORD: ${{ secrets.ftp_password }}
-      run: |
-        # Install the cPanel CLI tool
-          --host $CPANEL_HOST \
-          --username $CPANEL_USERNAME \
-          --password $CPANEL_PASSWORD \
-          --path /public_html/ \
-          --files frontend/TV-SeriesDisplaye-master/build/* backend/dist/*
-        
-        # Check the deployment status
-        if [ $? -ne 0 ]; then
-          echo "Deployment failed. Exiting with error."
-          exit 1
-        else
-          echo "Deployment successful."
-        fi
+      - name: Install dependencies (backend)
+        run: |
+          cd backend
+          npm ci
+
+      - name: Build backend
+        run: |
+          cd backend
+          npm run build
+
+      - name: Deploy to server
+        env:
+          SSH_HOST: ${{ secrets.FTP_HOST }}
+          SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          # REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        run: |
+          # Install SSH client
+          apt-get update && apt-get install -y openssh-client
+
+          # Deploy frontend
+          scp -r ./frontend/dist/* $SSH_USERNAME@$SSH_HOST:$REMOTE_PATH/frontend/
+
+          # Deploy backend
+          scp -r ./backend/dist/* $SSH_USERNAME@$SSH_HOST:$REMOTE_PATH/backend/
+
+          # Connect to server and restart the application
+          ssh $SSH_USERNAME@$SSH_HOST <<EOF
+            # Navigate to the application directory
+            cd $REMOTE_PATH
+
+            # Restart the backend service
+            pm2 restart backend
+
+            # Restart the frontend service
+            pm2 restart frontend
+          EOF
+
+          # Check the deployment status
+          if [ $? -ne 0 ]; then
+            echo "Deployment failed. Exiting with error."
+            exit 1
+          else
+            echo "Deployment successful."
+          fi
