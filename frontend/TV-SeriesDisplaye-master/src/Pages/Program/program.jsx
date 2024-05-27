@@ -113,29 +113,7 @@ const Program = ({ show, onClose }) => {
   console.log("movies data", movies);
   console.log("mnmnmnmnm", prog_data);
 
-  const ["", setData] = useState([
-    {
-      id: 3,
-      title: "Bob Johnson",
-      duration: "duration",
-      description: "description",
-      status: true,
-    },
-    {
-      id: 2,
-      title: "Jane Smith",
-      duration: "durationd",
-      description: "description",
-      status: false,
-    },
-    {
-      id: 1,
-      title: "John Doe",
-      duration: "durationd",
-      description: "description",
-      status: true,
-    },
-  ]);
+  
   const initialFormData = {
     url: "",
     duration: "",
