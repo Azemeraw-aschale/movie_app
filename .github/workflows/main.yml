@@ -26,12 +26,14 @@ jobs:
       run: |
         npm install
         npm ci
+        npm install --save-dev react-scripts
 
     - name: Install backend dependencies
       working-directory: ./backend
       run: |
         npm install
         npm ci
+        npm install --save-dev react-scripts
 
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
