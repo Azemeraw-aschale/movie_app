@@ -41,9 +41,9 @@ jobs:
 
     - name: Deploy to server
       env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        SSH_HOST: ${{ secrets.FTP_HOST }}
+        SSH_USERNAME: ${{ secrets.FTP_Username }}
+        SSH_PASSWORD: ${{ secrets.ftp_password }}
       run: |
         # Install SSH client
         sudo apt-get update
