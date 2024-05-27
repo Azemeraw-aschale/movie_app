@@ -41,9 +41,9 @@ jobs:
         
     - name: Deploy to cPanel
       env:
-        CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-        CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
-        CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
+        CPANEL_HOST: ${{ secrets.FTP_server }}
+        CPANEL_USERNAME: ${{ secrets.FTP_Username }}
+        CPANEL_PASSWORD: ${{ secrets.ftp_password }}
       run: |
         # Install the cPanel CLI tool
         npm install -g cpanel-node
@@ -53,5 +53,5 @@ jobs:
           --host $CPANEL_HOST \
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
-          --path /public_html/myapp \
+          --path /public_html/movie_app \
           --files dist/*
