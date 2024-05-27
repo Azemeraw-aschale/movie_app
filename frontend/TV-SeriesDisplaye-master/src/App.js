@@ -14,9 +14,9 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/customer" element={<CardContainer />} />
+          <Route path="/" element={<CardContainer />} />
 
-          <Route path="/" element={<Login/>} />
+          // <Route path="/" element={<Login/>} />
           <Route path="/home" element={<Home />} />
 
           <Route path="/Channel" element={<Channel />} />
