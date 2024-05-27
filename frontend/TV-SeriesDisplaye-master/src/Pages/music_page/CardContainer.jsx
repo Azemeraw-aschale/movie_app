@@ -16,7 +16,7 @@ const CardContainer = ({  autoplay = false}) => {
   // const [users, setUsers] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
   const cardListRef = useRef(null);
-  const ["", setMovies] = useState([]);
+  const [data, setMovies] = useState([]);
 
   const fetchMovies = () => {
     fetch("https://movie-app-lumh.onrender.com/api/movies")
