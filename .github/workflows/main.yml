@@ -23,7 +23,7 @@ jobs:
 
       - name: Build frontend
         run: |
-          cd frontend/tv-program
+          cd frontend/TV-SeriesDisplaye-master
           npm run build
 
       - name: Install dependencies (backend)
@@ -46,7 +46,7 @@ jobs:
           apt-get update && apt-get install -y openssh-client
 
           # Deploy frontend
-          scp -r ./frontend/tv-program/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/frontend/
+          scp -r ./frontend/TV-SeriesDisplaye-master/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/frontend/
           # Deploy backend
           scp -r ./backend/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/backend/
 
