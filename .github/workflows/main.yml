@@ -1,71 +1,56 @@
-name: Deploy React and Node.js Project on push
+name: Build and Deploy
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  web-deploy:
-    name: Deploy
+
+  build:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Get the latest code
-        uses: actions/checkout@v2.3.2
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-      - name: Use Node.js
-        uses: actions/setup-node@master
-        with:
-          node-version: '14'
+    - name: Clear npm cache
+      run: npm cache clean --force
 
-      - name: Install dependencies (frontend)
-        run: |
-          cd frontend/TV-SeriesDisplaye-master
-          npm ci
+    - name: Install frontend dependencies
+      working-directory: ./frontend/TV-SeriesDisplaye-master
+      run: |
+        npm install
+        npm ci
 
-      - name: Build frontend
-        run: |
-          cd frontend/TV-SeriesDisplaye-master
-          npm run build
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: |
+        npm install
+        npm ci
 
-      - name: Install dependencies (backend)
-        run: |
-          cd backend
-          npm ci
+    - name: Build backend
+      working-directory: ./backend
+      run: |
+        npm run build
 
-      - name: Build backend
-        run: |
-          cd backend
-          npm run build
-
-      - name: Deploy to server
-        env:
-          SSH_HOST: ${{ secrets.FTP_HOST }}
-          SSH_USERNAME: ${{ secrets.FTP_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          # Install SSH client
-          apt-get update && apt-get install -y openssh-client
-
-          # Deploy frontend
-          scp -r ./frontend/TV-SeriesDisplaye-master/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/frontend/
-          # Deploy backend
-          scp -r ./backend/dist/* $SSH_USERNAME@$SSH_HOST:/var/www/my-app/backend/
-
-          # Connect to server and restart the application
-          ssh $SSH_USERNAME@$SSH_HOST <<EOF
-            # Navigate to the application directory
-            cd /var/www/my-app
-
-            # Restart the backend service
-            pm2 restart backend
-
-            # Restart the frontend service
-            pm2 restart frontend
-          EOF
-
-          # Check the deployment status
-          if [ $? -ne 0 ]; then
-            echo "Deployment failed. Exiting with error."
-            exit 1
-          else
-            echo "Deployment successful."
-          fi
+    - name: Deploy to cPanel
+      env:
+        CPANEL_HOST: ${{ secrets.FTP_HOST }}
+        CPANEL_USERNAME: ${{ secrets.FTP_USERNAME }}
+        CPANEL_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      run: |
+        # Install the cPanel CLI tool
+        npm install -g cpanel-node
+        
+        # Deploy the application
+        cpanel-node deploy \
+          --host $CPANEL_HOST \
+          --username $CPANEL_USERNAME \
+          --password $CPANEL_PASSWORD \
+          --path /public_html/ \
+          --files frontend/TV-SeriesDisplaye-master/build/* backend/dist/*
