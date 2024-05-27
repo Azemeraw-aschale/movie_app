@@ -32,12 +32,6 @@ jobs:
       run: |
         npm install
         npm ci
-
-    - name: Build backend
-      working-directory: ./backend
-      run: |
-        npm run build
-
     - name: Build frontend
       working-directory: ./frontend/TV-SeriesDisplaye-master
       run: |
