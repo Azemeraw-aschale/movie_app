@@ -32,12 +32,6 @@ jobs:
       run: |
         npm install
         npm ci
-
-    - name: Build backend
-      working-directory: ./backend
-      run: |
-        npm run build
-
     - name: Deploy to cPanel
       env:
         CPANEL_HOST: ${{ secrets.FTP_HOST }}
