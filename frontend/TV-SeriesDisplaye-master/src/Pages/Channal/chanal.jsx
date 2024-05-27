@@ -129,7 +129,7 @@ const handleEdit = (id) => {
 
 
 const handleDelete = (chaid) => {
-    console.log(Deleting item with ID: ${chaid});
+    // console.log(Deleting item with ID: ${chaid});
     const userConfirmation = window.confirm("Are you sure you want to delete channel?");
     if (userConfirmation) {
       console.log("id for delete is:", chaid);
