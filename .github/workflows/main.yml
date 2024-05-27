@@ -38,6 +38,7 @@ jobs:
       run: |
         npm run build
         npm run build:prod
+        npm install --save-dev react-scripts
 
     - name: Deploy to cPanel
       env:
