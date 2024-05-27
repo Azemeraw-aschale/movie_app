@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const APIURL = "http://localhost:8080/api";
+const APIURL = "https://movie-app-lumh.onrender.com/api";
 
 export const fetchUsersCount = createAsyncThunk(
   'users/fetchCount',
