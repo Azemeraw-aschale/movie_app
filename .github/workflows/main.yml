@@ -55,5 +55,5 @@ jobs:
           --host $CPANEL_HOST \
           --username $CPANEL_USERNAME \
           --password $CPANEL_PASSWORD \
-          --path /public_html/movie_app \
+          --path /public_html/ \
           --files frontend/TV-SeriesDisplaye-master/dist/* backend/dist/*
