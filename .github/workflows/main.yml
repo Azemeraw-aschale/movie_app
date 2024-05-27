@@ -37,7 +37,11 @@ jobs:
       working-directory: ./backend
       run: |
         npm run build
-        npm run start
+
+    - name: Start backend
+      working-directory: ./backend
+      run: |
+        npm start
         
     - name: Deploy to cPanel
       env:
