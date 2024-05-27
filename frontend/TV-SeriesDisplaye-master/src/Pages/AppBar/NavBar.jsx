@@ -1,8 +1,8 @@
 import { Notifications } from '@mui/icons-material';
 import { Avatar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import ListIcon from '@mui/icons-material/List';
+import {useLocation } from 'react-router-dom';
+// import ListIcon from '@mui/icons-material/List';
 
 function NavBar() {
   const location = useLocation();
