@@ -13,11 +13,11 @@ export const addMovie = createAsyncThunk(
           "content-type": "application/json",
         },
       });
-      console.log("data sent to the server with ", res.data, res.status);
+      console.log("data sent to the server with nnmnm ", res.data, res.status);
 
       return res.data;
     } catch (error) {
-      console.log("the error for unable to send data is ", error);
+      console.log("the error for unable to send data ismnnnnnnnnnmnnnm ", error);
       return rejectWithValue(error.message);
     }
   }
