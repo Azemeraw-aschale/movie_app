@@ -46,12 +46,6 @@ const style = {
   alignItems: 'center',
   p: 4,
 };
-
-
-
-
-
-
 const ChannelPage = () => {
 
   const [open, setOpen] = useState(false);
@@ -128,14 +122,19 @@ const handleEdit = (id) => {
 };;
 
 
-const handleDelete = (chaid) => {
+const handleDelete = async (chaid) => {
     // console.log(Deleting item with ID: ${chaid});
     const userConfirmation = window.confirm("Are you sure you want to delete channel?");
     if (userConfirmation) {
       console.log("id for delete is:", chaid);
       dispatch(deleteChanal({ id: chaid }));
+      await dispatch(fetchChanal());
+      window.location.reload();
     }
   };
+
+ 
+
   // const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

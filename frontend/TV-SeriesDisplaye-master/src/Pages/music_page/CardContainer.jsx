@@ -5,12 +5,16 @@ import { CiClock2 } from "react-icons/ci";
 import { IoStarSharp } from "react-icons/io5";
 import { PiTelevisionSimpleFill } from "react-icons/pi";
 import { SiCnn, SiFox, SiNbc } from "react-icons/si";
-import { FcBbc } from "react-icons/fc";
+import { FcBbc, FcFilm, FcFilmReel } from "react-icons/fc";
 import { TbBrandDisney } from "react-icons/tb";
 import { MdOutlineAbc } from "react-icons/md";
 import ReactPlayer from 'react-player';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMusic } from '../../apis/cardSlice';
 
 const CardContainer = ({  autoplay = false}) => {
+  const [open,setOpen]=useState(false);
+  const dispatch=useDispatch();
   const [cardIndex, setCardIndex] = useState(null);
 
   // const [users, setUsers] = useState([]);
@@ -18,50 +22,78 @@ const CardContainer = ({  autoplay = false}) => {
   const cardListRef = useRef(null);
   const [data, setMovies] = useState([]);
 
-  const fetchMovies = () => {
-    fetch("https://movie-app-lumh.onrender.com/api/movies")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Movies data:", data);
-        data.movies.forEach((movie, index) => {
-          console.log(`Movie ${index + 1}:`);
-          console.log("Title:", movie.title);
-          console.log("Duration:", movie.duration);
-          console.log("Description:", movie.description);
-  
-          // Accessing category name
-          console.log("Category Name:", movie.categories?.name || 'N/A');
-  
-          // Accessing channel name
-          console.log("Channel Name:", movie.channels?.name || 'N/A');
-  
-          // Accessing type name
-          console.log("Type Name:", movie.types?.name || 'N/A');
+  useEffect(()=>{
+    dispatch(fetchMusic());
+  },[dispatch]);
 
-          console.log("url:",movie.vi)
-  
-          console.log("---------");
-        });
-  
-        setMovies(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching movies:", error);
-      });
-  };
+  const music=useSelector((state)=>state.music.data);
+  console.log("this is my life.,.,,,..,",music);
+  // const movies = music.movies;
+  const movies = Array.isArray(music?.movies) ? music.movies : [];
+console.log("first musc",movies)
 
+
+  // Assuming there's only one movie in the array for simplicity
+  const [firstMovie] = movies; // Extracting the first movie object
+  
+  // Destructuring assignment
+  const {
+    categories = {},
+    categoryid,
+    channelid,
+    channels = [],
+    description,
+    duration,
+    id,
+    title,
+    typeid,
+    types = {},
+    videourl
+  } = firstMovie || {};
+  const ff=categories.name;
+  console.log("categories data", ff)
+  console.log(categories); // { id: 1, name: 'sslls' }
+  console.log(categoryid); // 1
+  console.log(channelid); // 1
+  console.log(channels); // { id: 1, name: 'Azemeraw Aschale' }
+  console.log(description); // "title.com"
+  console.log(duration); // 12
+  console.log(id); // 29
+  console.log(title); // "title"
+  console.log(typeid); // 1
+  console.log(types); // { id: 1, name: 'azitype' }
+  console.log(videourl); 
+  // const fetchMovies = () => {
+  //   return fetch("https://movie-app-lumh.onrender.com/api/movies")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       return data.movies;
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching movies:", error);
+  //       return [];
+  //     });
+  // };
+  
+  // // Usage outside the function
+  // fetchMovies().then((movies) => {
+  //   // Now you can use the `movies` variable outside the function
+  //   console.log("this is outside of the variable.....",movies);
+  //   console.log("outside and inside ",movies.title);
+  // });
+console.log("types from  types",types.name)
 
 
   const cards = [
-    { id: 1, title: 'FOX', content: 'This is the content of Card 1.', videoUrl: 'https://www.youtube.com/shorts/12AjixuM9bM', icon: <SiFox/> },
-    { id: 2, title: 'ABC TV', content: 'This is the content of Card 2.', videoUrl: 'https://www.youtube.com/embed/FHHKrf9Dpvs?si=osRhfgBnQdmqfy4e', icon: <MdOutlineAbc /> },
-    { id: 3, title: 'AMC TV', content: 'This is the content of Card 3.', videoUrl: 'https://www.youtube.com/embed/-RsAP6A5rNs?si=s5esD7bb2qV_KzoA', icon: <PiTelevisionSimpleFill /> },
-    { id: 4, title: 'NBC', content: 'This is the content of Card 4.', videoUrl: 'https://www.youtube.com/embed/UPkMkIOzej8?si=76bk47E8XcF2JFD7', icon: <SiNbc />  },
-    { id: 5, title: 'HBO', content: 'This is the content of Card 5.', videoUrl: 'https://www.youtube.com/embed/UPkMkIOzej8?si=76bk47E8XcF2JFD7', icon: <RiMovie2Line /> },
-    { id: 6, title: 'BBC', content: 'This is the content of Card 6.', videoUrl: 'https://youtube.com/shorts/12AjixuM9bM?si=jmo_1w57mtdu4opX', icon: <FcBbc /> },
-    { id: 7, title: 'ESPN', content: 'This is the content of Card 7.', videoUrl: 'https://www.youtube.com/watch?v=jycjmnet8Rw', icon: <RiMovie2Line /> },
-    { id: 8, title: 'Disnepy', content: 'Movies', videoUrl: 'https://www.youtube.com/watch?v=JxRXKrBznj4', icon: <RiMovie2Line /> },
-    { id: 9, title: 'CNN', content: 'Movies', videoUrl: 'https://www.youtube.com/watch?v=JxRXKrBznj4', icon: <RiMovie2Line /> },
+    { id: id, title: 'FOX', content: 'This is the content of Card 1.', videoUrl: videourl, icon: <SiFox/> },
+    { id: id, title: types.name, content: description, videoUrl: videourl, icon: <MdOutlineAbc /> },
+    { id: 3, title: 'AMC TV', content: 'This is the content of Card 3.', videoUrl: videourl, icon: <PiTelevisionSimpleFill /> },
+    { id: 4, title: 'NBC', content: 'This is the content of Card 4.', videoUrl: videourl, icon: <SiNbc />  },
+    { id: 5, title: 'HBO', content: 'This is the content of Card 5.', videoUrl: videourl, icon: <RiMovie2Line /> },
+    { id: 6, title: 'BBC', content: 'This is the content of Card 6.', videoUrl: videourl, icon: <FcBbc /> },
+    { id: 7, title: 'ESPN', content: 'This is the content of Card 7.', videoUrl: videourl, icon: <RiMovie2Line /> },
+    { id: 8, title: 'Disnepy', content: 'Movies', videoUrl: videourl, icon: <RiMovie2Line /> },
+    { id: 9, title: 'CNN', content: 'Movies', videoUrl: videourl, icon: <RiMovie2Line /> },
 
   ];
 
@@ -73,7 +105,7 @@ const CardContainer = ({  autoplay = false}) => {
 
   useEffect(() => {
 
-    fetchMovies()
+    // fetchMovies()
 
     if (cardIndex !== null && cardListRef.current) {
       const cardList = cardListRef.current;
@@ -91,6 +123,7 @@ const CardContainer = ({  autoplay = false}) => {
   }, [cardIndex, cards.length]);
 
   return (
+    // fetchMovies(),
     <Box className="container" sx={{ height: '100vh', position: 'relative', backgroundColor: '#48456e', color: '#fff' }}>
      
       <Grid container sx={{ height: '100%', position: 'relative', zIndex: 1 }}>
@@ -160,9 +193,8 @@ const CardContainer = ({  autoplay = false}) => {
             }
           }}>
 
- <Box  onClick={() => handleCardClick(0)} sx={{cursor:'pointer'}}><SiFox/> Fox</Box>
-
-            <Box  onClick={() => handleCardClick(1)} ><MdOutlineAbc /> ABC TV</Box>
+            <Box  onClick={() => handleCardClick(0)} sx={{cursor:'pointer'}}><SiFox/> FOX</Box>
+            <Box  onClick={() => handleCardClick(channels.id)} ><MdOutlineAbc /> {channels.name}</Box>
             <Box onClick={() => handleCardClick(2)}><PiTelevisionSimpleFill /> MBC TV</Box>
             <Box onClick={() => handleCardClick(3)}><SiNbc /> NBC</Box>
             <Box onClick={() => handleCardClick(4)}><PiTelevisionSimpleFill /> HBO</Box>

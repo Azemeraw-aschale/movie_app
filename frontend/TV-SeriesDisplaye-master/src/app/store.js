@@ -9,6 +9,7 @@ import categorySlice from "../apis/categorySlice";
 import programcountSlice from "../apis/programSlice";
 import  fetchusersCountreducer from "../apis/userDashboardSlice";
 import fetchchanalCountreducer from "../apis/chanalcountSlice";
+import musicSlice from "../apis/cardSlice";
 
 
 
@@ -26,6 +27,7 @@ export const store = configureStore({
         programcount:programcountSlice,
         users:fetchusersCountreducer,
         chanalcount: fetchchanalCountreducer,
+        music:musicSlice,
 
     }
 });
