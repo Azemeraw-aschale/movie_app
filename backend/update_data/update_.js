@@ -164,4 +164,15 @@ router.put('/api/movies/:id', async (req, res) => {
       res.status(500).json({ error: 'An error occurred while deleting the channel.' });
     }
   });
+  router.delete('/api/channelss', async (req, res) => {
+    try {
+      // Delete all data in the table
+      await prisma.channels.deleteMany();
+  
+      res.status(200).json({ message: 'All data in the table deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting all data:', error);
+      res.status(500).json({ error: 'An error occurred while deleting all data in the table.' });
+    }
+  });
   module.exports = router;
