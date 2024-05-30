@@ -4,7 +4,7 @@ import { RiMovie2Line } from "react-icons/ri";
 import { CiClock2 } from "react-icons/ci";
 import { IoStarSharp } from "react-icons/io5";
 import { PiTelevisionSimpleFill } from "react-icons/pi";
-import { SiCnn, SiFox, SiNbc } from "react-icons/si";
+import { SiCnn, SiFox, SiNbc, SiNormalizedotcss } from "react-icons/si";
 import { FcBbc, FcFilm, FcFilmReel } from "react-icons/fc";
 import { TbBrandDisney } from "react-icons/tb";
 import { MdOutlineAbc } from "react-icons/md";
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMusic } from '../../apis/cardSlice';
 
 const CardContainer = ({  autoplay = false}) => {
+  const [showControls, setShowControls] = useState(true);
   const [open,setOpen]=useState(false);
   const dispatch=useDispatch();
   const [cardIndex, setCardIndex] = useState(null);
@@ -50,46 +51,13 @@ console.log("first musc",movies)
     types = {},
     videourl
   } = firstMovie || {};
-  const ff=categories.name;
-  console.log("categories data", ff)
-  console.log(categories); // { id: 1, name: 'sslls' }
-  console.log(categoryid); // 1
-  console.log(channelid); // 1
-  console.log(channels); // { id: 1, name: 'Azemeraw Aschale' }
-  console.log(description); // "title.com"
-  console.log(duration); // 12
-  console.log(id); // 29
-  console.log(title); // "title"
-  console.log(typeid); // 1
-  console.log(types); // { id: 1, name: 'azitype' }
-  console.log(videourl); 
-  // const fetchMovies = () => {
-  //   return fetch("https://movie-app-lumh.onrender.com/api/movies")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       return data.movies;
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching movies:", error);
-  //       return [];
-  //     });
-  // };
-  
-  // // Usage outside the function
-  // fetchMovies().then((movies) => {
-  //   // Now you can use the `movies` variable outside the function
-  //   console.log("this is outside of the variable.....",movies);
-  //   console.log("outside and inside ",movies.title);
-  // });
-console.log("types from  types",types.name)
-
 
   const cards = [
-    { id: id, title: 'FOX', content: 'This is the content of Card 1.', videoUrl: videourl, icon: <SiFox/> },
+    { id: id, title: types.name, content: 'This is the content of Card 1.', videoUrl: videourl, icon: <SiFox/> },
     { id: id, title: types.name, content: description, videoUrl: videourl, icon: <MdOutlineAbc /> },
-    { id: 3, title: 'AMC TV', content: 'This is the content of Card 3.', videoUrl: videourl, icon: <PiTelevisionSimpleFill /> },
+    { id: 3, title: 'AMC TV', content: 'This is the content of Card 3.', videoUrl: "https://www.youtube.com/watch?v=K-EnGnz0wGQ", icon: <PiTelevisionSimpleFill /> },
     { id: 4, title: 'NBC', content: 'This is the content of Card 4.', videoUrl: videourl, icon: <SiNbc />  },
-    { id: 5, title: 'HBO', content: 'This is the content of Card 5.', videoUrl: videourl, icon: <RiMovie2Line /> },
+    { id: 5, title: 'HBO', content: description, videoUrl: videourl, icon: <RiMovie2Line /> },
     { id: 6, title: 'BBC', content: 'This is the content of Card 6.', videoUrl: videourl, icon: <FcBbc /> },
     { id: 7, title: 'ESPN', content: 'This is the content of Card 7.', videoUrl: videourl, icon: <RiMovie2Line /> },
     { id: 8, title: 'Disnepy', content: 'Movies', videoUrl: videourl, icon: <RiMovie2Line /> },
@@ -243,17 +211,21 @@ console.log("types from  types",types.name)
 
               // </iframe>
               <ReactPlayer
-              
-              
               url={videoUrl}
-              controls
+              controls={showControls}
               width="100%"
               height="100%"
-              playing={autoplay}
+              playing={true} // Autoplay enabled
               loop
-              muted
+              muted={false} // Unmute the video
+              playbackRate={1} // Adjust playback speed (1.0 is normal speed)
+              volume={0.8} // Set the volume (0.0 to 1.0)
+              progressInterval={1000} // Update progress every 1 second
+              pip={true} // Enable Picture-in-Picture mode
+              onControlsStateChange={(state) => setShowControls(state.controls)}
             />
             )}
+ 
             {cardIndex !== null && (
               <Box
                 className="overlay"
