@@ -19,24 +19,27 @@ jobs:
         node-version: '16'
 
     - name: Install dependencies
-      run: npm install --prefix backend
+      run: npm install --prefix another_folder
 
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.0.1
+    - name: Build project
+      run: npm run build --prefix another_folder
+
+    - name: Copy files via SCP
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PASSWORD }}
-        source: "backend"
+        key: ${{ secrets.FTP_PRIVATE_KEY }}
+        source: "another_folder"
         target: "/backend"
 
     - name: Execute SSH command
-      uses: appleboy/ssh-action@v0.0.1
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PASSWORD }}
+        key: ${{ secrets.FTP_PRIVATE_KEY }}
         script: |
           cd /backend
           npm install
-          if pm2 describe movie-app > /dev/null; then pm2 restart movie-app; else pm2 start index.js --name movie-app; fi
+          if pm2 describe movie-app > /dev/null; then pm2 restart movie-app; else pm2 start index.js --name your-app; fi
