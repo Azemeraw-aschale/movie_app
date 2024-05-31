@@ -26,7 +26,7 @@ jobs:
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PRIVATE_KEY }}
+        key: ${{ secrets.FTP_PASSWORD }}
         source: "backend"
         target: "/backend"
 
@@ -35,7 +35,7 @@ jobs:
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PRIVATE_KEY }}
+        key: ${{ secrets.FTP_PASSWORD }}
         script: |
           cd /backend
           npm install
