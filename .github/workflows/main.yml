@@ -21,12 +21,16 @@ jobs:
     - name: Install dependencies
       run: npm install --prefix backend
 
+    - name: Debug Info
+      run: env
+
     - name: Copy files via SCP
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PASSWORD }}
+        password: ${{ secrets.FTP_PASSWORD }}  # Use this if your server uses password-based authentication
+        # key: ${{ secrets.FTP_PRIVATE_KEY }}  # Use this if your server uses SSH key-based authentication
         source: "backend"
         target: "/backend"
 
@@ -35,7 +39,8 @@ jobs:
       with:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
-        key: ${{ secrets.FTP_PASSWORD }}
+        password: ${{ secrets.FTP_PASSWORD }}  # Use this if your server uses password-based authentication
+        # key: ${{ secrets.FTP_PRIVATE_KEY }}  # Use this if your server uses SSH key-based authentication
         script: |
           cd /backend
           npm install
