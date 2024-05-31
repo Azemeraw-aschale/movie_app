@@ -21,9 +21,6 @@ jobs:
     - name: Install dependencies
       run: npm install --prefix backend
 
-    - name: Build project
-      run: npm run build --prefix backend
-
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.0.1
       with:
@@ -42,4 +39,4 @@ jobs:
         script: |
           cd /backend
           npm install
-          if pm2 describe your-app > /dev/null; then pm2 restart your-app; else pm2 start app.js --name your-app; fi
+          if pm2 describe movie-app > /dev/null; then pm2 restart movie-app; else pm2 start index.js --name movie-app; fi
