@@ -21,9 +21,6 @@ jobs:
     - name: Install dependencies
       run: npm install --prefix backend
 
-    - name: Build project
-      run: npm run build --prefix backend
-
     - name: Copy files via SCP
       uses: appleboy/scp-action@master
       with:
