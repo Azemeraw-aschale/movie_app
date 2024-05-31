@@ -19,10 +19,10 @@ jobs:
         node-version: '16'
 
     - name: Install dependencies
-      run: npm install
+      run: npm install --prefix backend
 
     - name: Build project
-      run: npm run build
+      run: npm run build --prefix backend
 
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.0.1
@@ -30,7 +30,7 @@ jobs:
         host: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         key: ${{ secrets.FTP_PASSWORD }}
-        source: "."
+        source: "backend"
         target: "/backend"
 
     - name: Execute SSH command
@@ -42,4 +42,4 @@ jobs:
         script: |
           cd /backend
           npm install
-          pm2 restart all || pm2 start app.js --name "my-app"
+          if pm2 describe your-app > /dev/null; then pm2 restart your-app; else pm2 start app.js --name your-app; fi
