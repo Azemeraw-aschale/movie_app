@@ -48,7 +48,6 @@ const style = {
 };
 const ChannelPage = () => {
 
-  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const chanal = useSelector((state) => state.chanals.data);
 
@@ -56,6 +55,7 @@ const ChannelPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortDirection, setSortDirection] = useState('asc');
+  const [file, setFile] = useState(null);
   // const [setData] = useState(null);
 
   const handleChangePage = (event, newPage) => {
@@ -106,83 +106,81 @@ const ChannelPage = () => {
     setIsActive((prevState) => !prevState);
   };
 
-
   const [formData, setFormData] = useState({
     name: '',
-    
+    img: '',
   });
-
   
   const paginatedChannels = sortedChannels.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-const handleEdit = (id) => {
-  console.log("Editing item with ID:", id);
-};;
-
-
-const handleDelete = async (chaid) => {
-    // console.log(Deleting item with ID: ${chaid});
-    const userConfirmation = window.confirm("Are you sure you want to delete channel?");
+  
+  const handleEdit = (id) => {
+    console.log("Editing item with ID:", id);
+  };
+  
+  const handleDelete = async (chaid) => {
+    const userConfirmation = window.confirm("Are you sure you want to delete the channel?");
     if (userConfirmation) {
-      console.log("id for delete is:", chaid);
+      console.log("ID for delete is:", chaid);
       dispatch(deleteChanal({ id: chaid }));
       await dispatch(fetchChanal());
       window.location.reload();
     }
   };
-
- 
-
-  // const [open, setOpen] = React.useState(false);
+  
+  const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
   const [errors, setErrors] = useState({});
+  
   const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-    setErrors({ ...errors, [event.target.name]: false });
+    if (event && event.target) {
+      const { name, value, type, files } = event.target;
+      if (type === 'file') {
+        setFormData({ ...formData, [name]: files[0] });
+      } else {
+        setFormData({ ...formData, [name]: value });
+      }
+      setErrors({ ...errors, [name]: false });
+    }
   };
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = { ...errors };
-    const fields = ['name'];
-    fields.forEach(field => {
-      if (!formData[field].trim()) {
+    const fields = ['name', 'img'];
+
+    fields.forEach((field) => {
+      if (!formData[field]) {
         newErrors[field] = true;
       }
     });
+
     setErrors(newErrors);
 
-    if (Object.values(newErrors).every(error => !error)) {
+    if (Object.values(newErrors).every((error) => !error)) {
       const dataContainer = {
         name: formData.name,
-        // "apiKey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb21wYW55bmFtZSI6InpheXJpZGUiLCJpZCI6IjM1NTY1Mjk3LTZjZGUtNDVmNy1hYjllLTAwMjU1Y2MxZGVlZSIsInVzZXJuYW1lIjoiemF5cmlkZSJ9.s3mr--J2KM72MWedho9Vo5qOZn-zSk3IR1ZXZ73xppw"
+        img: formData.img,
       };
+
       console.log(dataContainer);
 
       dispatch(addChannal(dataContainer));
-      window.alert('Channal registered successfully!');
+      window.alert('Channel registered successfully!');
       handleClose();
       await dispatch(fetchChanal());
     }
   };
-  // const [showSidebar, setShowSidebar] = useState(false);   
-  //  const toggleSidebar = () => {
-  //   setShowSidebar(!showSidebar);
-  // };
+  
   return (
     <div style={{ display: 'flex' }}>
-      {/* <NavBar>
-        <IconButton onClick={toggleSidebar}>
-          <MenuIcon />
-        </IconButton>
-    </NavBar> */}
-      
-        <SideBar/>
-      
+      <SideBar />
       <div style={{ flex: '1' }}>
-        <NavBar /> {/* Include the NavBar component */}
+        <NavBar />
         <Modal
           open={open}
           onClose={handleClose}
@@ -194,19 +192,34 @@ const handleDelete = async (chaid) => {
               Add Channel
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 10, display: 'flex', flexDirection: 'column' }}>
-
               Name
-              <TextField id="filled-basic" variant="filled" sx={{ width: '500px' }}
-                onChange={handleChange} name="name" error={errors.name}
+              <TextField
+                id="filled-basic"
+                variant="filled"
+                sx={{ width: '500px' }}
+                onChange={handleChange}
+                name="name"
+                error={errors.name}
                 helperText={errors.name ? 'Name is required' : ''}
               />
-
             </Typography>
-
-
+            <Typography id="modal-modal-description" sx={{ mt: 10, display: 'flex', flexDirection: 'column' }}>
+              Channel Icon
+              <TextField
+                id="filled-basic"
+                variant="filled"
+                sx={{ width: '500px' }}
+                onChange={handleChange}
+                type="file"
+                name="img"
+                error={errors.img}
+                helperText={errors.img ? 'Image is required' : ''}
+              />
+            </Typography>
             <Stack direction="row" spacing={2} sx={{ mt: 5, ml: 25 }}>
-              <Button variant="outlined" sx={{ pr: 6, pl: 6 }}>Cancel</Button>
-
+              <Button onClick={handleClose} variant="outlined" sx={{ pr: 6, pl: 6 }}>
+                Cancel
+              </Button>
               <Button onClick={handleSubmit} variant="contained" href="#outlined-buttons" sx={{ pr: 6, pl: 6 }}>
                 Add
               </Button>
@@ -215,7 +228,7 @@ const handleDelete = async (chaid) => {
         </Modal>
 
 
-<Box margin={2} bgcolor={light}>
+        <Box margin={2} bgcolor={light}>
           <Box
             flexGrow={1}
             p={1}
@@ -344,7 +357,7 @@ const handleDelete = async (chaid) => {
                   </IconButton>
 
 
-<IconButton onClick={() => handleEdit(item.id)}>
+        <IconButton onClick={() => handleEdit(item.id)}>
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => handleDelete(item.id)} color='red'>
@@ -364,7 +377,7 @@ const handleDelete = async (chaid) => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-          </TableContainer>
+      </TableContainer>
           
         </Box>
       </div>

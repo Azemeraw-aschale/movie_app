@@ -1,7 +1,9 @@
 // import { Try } from "@mui/icons-material";
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const APIURL = "https://movie-app-lumh.onrender.com/api";
+const APIURL ="https://movie-app-lumh.onrender.com/api";
+// const APIURL = "http://localhost:8080/api";
+
 
 
 

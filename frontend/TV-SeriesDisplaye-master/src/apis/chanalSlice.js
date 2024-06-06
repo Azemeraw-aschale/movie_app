@@ -2,22 +2,28 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const APIURL = "https://movie-app-lumh.onrender.com/api";
-
+// const APIURL = "http://localhost:8080/api";
 export const addChannal = createAsyncThunk(
-  "add/chanals",
-  async (chanalData, { rejectWithValue }) => {
+  'add/channels',
+  async (channelData, { rejectWithValue }) => {
     try {
-      console.log("the following data is sent to the server", chanalData);
-      const res = await axios.post(`${APIURL}/channels`, chanalData, {
+      
+      console.log('The following data is sent to the server:', channelData);
+      const formData = new FormData();
+      formData.append('name', channelData.name);
+      formData.append('img', channelData.img);
+
+      const res = await axios.post(`${APIURL}/channels`, formData, {
         headers: {
-          "content-type": "application/json",
+          'Content-Type': 'multipart/form-data',
         },
       });
-      console.log("data sent to the server with ", res.data, res.status);
+
+      console.log('Data sent to the server:', res.data, res.status);
 
       return res.data;
     } catch (error) {
-      console.log("the error for unable to send data is ", error);
+      console.log('Error sending data:', error);
       return rejectWithValue(error.message);
     }
   }

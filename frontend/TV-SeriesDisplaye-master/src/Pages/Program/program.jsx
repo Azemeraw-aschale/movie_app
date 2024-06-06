@@ -72,6 +72,7 @@ const Program = ({ show, onClose }) => {
 
   const fetchCatagory = () => {
     fetch("https://movie-app-lumh.onrender.com/api/catagories")
+    // fetch("http://localhost:8080/api/catagories")
       .then((response) => {
         return response.json();
       })
@@ -182,13 +183,14 @@ const Program = ({ show, onClose }) => {
     ];
 
     fields.forEach((field) => {
-      if (!formData[field].trim()) {
+      const value = formData[field];
+      if (typeof value === 'string' && value.trim() === '') {
         newErrors[field] = true;
       }
     });
     setErrors(newErrors);
     // aa=formData.url;
-    // console.log("hhhhhhhhhhhhgghghghg", formData.desc);
+    console.log("hhhhhhhhhhhhgghghghg", formData.channel);
     // if (Object.values(newErrors).every((error) => !error)) {
     //   console.log("hhhhhhhhhhhhhhh");
     const dataContainer = {
@@ -196,10 +198,10 @@ const Program = ({ show, onClose }) => {
       videourl: formData.url,
       description: formData.desc,
       duration: parseInt(formData.duration, 10),
-      channelId: 1,
+      channelId: formData.channel,
       title: formData.title,
-      categoryId: 1,
-      typeId: 1,
+      categoryId: formData.categori,
+      typeId: formData.type,
     };
     console.log(dataContainer);
 
@@ -267,29 +269,6 @@ const Program = ({ show, onClose }) => {
                       onChange={handleChange}
                       name="duration"
                     />
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    sx={{ mt: 4, display: "flex", flexDirection: "column" }}
-                  >
-                    Channel
-                    <Select
-                      id="filled-basic"
-                      variant="filled"
-                      sx={{ width: "500px" }}
-                      value={
-                        sortedChannels.length > 0 ? sortedChannels[0].id : ""
-                      }
-                      onChange={handleChange}
-                      name="channel"
-                    >
-                      {sortedChannels.map((channel) => (
-                        <MenuItem key={channel.id} value={channel.id}>
-                          {channel.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {/* Rest of your code */}
                   </Typography>
                   <Typography
                     id="modal-modal-description"
@@ -362,56 +341,86 @@ const Program = ({ show, onClose }) => {
                   </Typography>
                   <Typography
                     id="modal-modal-description"
-                    sx={{
-                      mt: 4,
-                      ml: 4,
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
+                    sx={{ mt: 4, display: "flex", flexDirection: "column" }}>
+                    Channel
+                 
+                {sortedChannels.length > 0 ? (
+                  <Select
+                    id="filled-basic"
+                    variant="filled"
+                    sx={{ width: "500px" }}
+                    value={formData.channel} // Use formData.channel as the value
+                    onChange={handleChange}
+                    name="channel"
                   >
-                    Types
-                    <Select
-                      id="filled-basic"
-                      variant="filled"
-                      sx={{ width: "500px" }}
-                      value={types.length > 0 ? types[0].id : ""}
-                      onChange={handleChange}
-                      name="type"
-                    >
-                      {types.map((channel) => (
-                        <MenuItem key={channel.id} value={channel.id}>
-                          {channel.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    {sortedChannels.map((channel) => (
+                      <MenuItem key={channel.id} value={channel.id}>
+                        {channel.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                ) : (
+                  <Typography>No channels available</Typography>
+                )}
+  
+
                     {/* Rest of your code */}
                   </Typography>
+                  
                   <Typography
-                    id="modal-modal-description"
-                    sx={{
-                      mt: 4,
-                      ml: 4,
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
+                  id="modal-modal-description"
+                  sx={{
+                    mt: 4,
+                    ml: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  Types
+                  <Select
+                    id="filled-basic"
+                    variant="filled"
+                    sx={{ width: "500px" }}
+                    value={formData.type} // Use formData.type as the value
+                    onChange={handleChange}
+                    name="type"
                   >
-                    Category
-                    <Select
-                      id="filled-basic"
-                      variant="filled"
-                      sx={{ width: "500px" }}
-                      value={users.length > 0 ? users[0].id : ""}
-                      onChange={handleChange}
-                      name="catagory"
-                    >
-                      {users.map((channel) => (
-                        <MenuItem key={channel.id} value={channel.id}>
-                          {channel.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {/* Rest of your code */}
-                  </Typography>
+                    {types.map((type) => (
+                      <MenuItem key={type.id} value={type.id}>
+                        {type.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {/* Rest of your code */}
+                </Typography>
+                <Typography
+                id="modal-modal-description"
+                sx={{
+                  mt: 4,
+                  ml: 4,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                Category
+                <Select
+                  id="filled-basic"
+                  variant="filled"
+                  sx={{ width: "500px" }}
+                  value={formData.categori} // Use formData.category as the value
+                  onChange={handleChange}
+                  name="categori"
+                >
+                  {users.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      {user.name}
+                    </MenuItem>
+                    
+                  ))}
+                 
+                </Select>
+                {/* Rest of your code */}
+              </Typography>
                   <Stack direction="row" spacing={2} sx={{ mt: 5, ml: 25 }}>
                     <Button
                       variant="outlined"

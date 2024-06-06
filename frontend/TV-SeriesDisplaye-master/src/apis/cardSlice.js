@@ -1,7 +1,8 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const APIURL = "https://movie-app-lumh.onrender.com/api";
-
+// http://localhost:8080
+// const APIURL="http://localhost:8080/api"
 export const fetchMusic = createAsyncThunk("fetch/music", async (page = 1) => {
   try {
     const res = await axios.get(`${APIURL}/movies`);

@@ -10,7 +10,6 @@ CREATE TABLE "categories" (
 CREATE TABLE "channels" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255),
-
     CONSTRAINT "channels_pkey" PRIMARY KEY ("id")
 );
 
