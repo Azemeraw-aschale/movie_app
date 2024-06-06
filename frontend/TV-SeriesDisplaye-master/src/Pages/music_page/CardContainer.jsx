@@ -9,86 +9,230 @@ import { FcBbc, FcFilm, FcFilmReel } from "react-icons/fc";
 import { TbBrandDisney } from "react-icons/tb";
 import { MdOutlineAbc } from "react-icons/md";
 import ReactPlayer from 'react-player';
+import screenfull from 'screenfull';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMusic } from '../../apis/cardSlice';
+import Duration from './Duration';
+import { FaStar } from 'react-icons/fa';
 
 const CardContainer = ({  autoplay = false}) => {
-  const [showControls, setShowControls] = useState(true);
-  const [open,setOpen]=useState(false);
-  const dispatch=useDispatch();
-  const [cardIndex, setCardIndex] = useState(null);
-
-  // const [users, setUsers] = useState([]);
-  const [videoUrl, setVideoUrl] = useState('');
-  const cardListRef = useRef(null);
-  const [data, setMovies] = useState([]);
-
-  useEffect(()=>{
-    dispatch(fetchMusic());
-  },[dispatch]);
-
-  const music=useSelector((state)=>state.music.data);
-  console.log("this is my life.,.,,,..,",music);
-  // const movies = music.movies;
-  const movies = Array.isArray(music?.movies) ? music.movies : [];
-console.log("first musc",movies)
+  const [url, setUrl] = useState(null);
+  const [pip, setPip] = useState(false);
+  const [playing, setPlaying] = useState(true);
+  const [controls, setControls] = useState(false);
+  const [light, setLight] = useState(false);
+  const [volume, setVolume] = useState(0.8);
+  const [muted, setMuted] = useState(false);
+  const [played, setPlayed] = useState(0);
+  const [loaded, setLoaded] = useState(0);
+  const [durationn, setDurationn] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1.0);
+  const [loop, setLoop] = useState(false);
+  const [seeking, setSeeking] = React.useState(false);
+  const playerRef = React.useRef(null);
+  const videoRef = React.useRef(null);
 
 
-  // Assuming there's only one movie in the array for simplicity
-  const [firstMovie] = movies; // Extracting the first movie object
-  
-  // Destructuring assignment
-  const {
-    categories = {},
-    categoryid,
-    channelid,
-    channels = [],
-    description,
-    duration,
-    id,
-    title,
-    typeid,
-    types = {},
-    videourl
-  } = firstMovie || {};
-
-  const cards = [
-    { id: id, title: types.name, content: 'This is the content of Card 1.', videoUrl: videourl, icon: <SiFox/> },
-    { id: id, title: types.name, content: description, videoUrl: videourl, icon: <MdOutlineAbc /> },
-    { id: 3, title: 'AMC TV', content: 'This is the content of Card 3.', videoUrl: "https://www.youtube.com/watch?v=K-EnGnz0wGQ", icon: <PiTelevisionSimpleFill /> },
-    { id: 4, title: 'NBC', content: 'This is the content of Card 4.', videoUrl: videourl, icon: <SiNbc />  },
-    { id: 5, title: 'HBO', content: description, videoUrl: videourl, icon: <RiMovie2Line /> },
-    { id: 6, title: 'BBC', content: 'This is the content of Card 6.', videoUrl: videourl, icon: <FcBbc /> },
-    { id: 7, title: 'ESPN', content: 'This is the content of Card 7.', videoUrl: videourl, icon: <RiMovie2Line /> },
-    { id: 8, title: 'Disnepy', content: 'Movies', videoUrl: videourl, icon: <RiMovie2Line /> },
-    { id: 9, title: 'CNN', content: 'Movies', videoUrl: videourl, icon: <RiMovie2Line /> },
-
-  ];
-
-  const handleCardClick = (index) => {
-    const clickedCard = cards[index];
-    setCardIndex(index);
-    setVideoUrl(clickedCard.videoUrl);
+  const load = (url) => {
+    setUrl(url);
+    setPlayed(0);
+    setLoaded(0);
+    setPip(false);
   };
 
-  useEffect(() => {
+  const handlePlayPause = () => {
+    setPlaying(!playing);
+  };
 
-    // fetchMovies()
+  const handleStop = () => {
+    setUrl(null);
+    setPlaying(false);
+  };
 
-    if (cardIndex !== null && cardListRef.current) {
-      const cardList = cardListRef.current;
-      const cardWidth = 240; // Adjusted width to fit 4 cards per window
-      const containerWidth = cardList.offsetWidth;
+  const handleToggleControls = () => {
+    const currentUrl = url;
+    setControls(!controls);
+    setUrl(null);
+    setUrl(currentUrl);
+  };
 
-      let translateX = 0;
+  const handleToggleLight = () => {
+    setLight(!light);
+  };
 
-      if (cardIndex * cardWidth + cardWidth > containerWidth) {
-        translateX = (cardIndex - Math.floor(containerWidth / cardWidth) + 1) * cardWidth;
-      }
+  const handleToggleLoop = () => {
+    setLoop(!loop);
+  };
 
-      cardList.style.transform = `translateX(-${translateX}px)`;
+  const handleVolumeChange = (e) => {
+    setVolume(parseFloat(e.target.value));
+  };
+
+  const handleToggleMuted = () => {
+    setMuted(!muted);
+  };
+
+  const handleSetPlaybackRate = (e) => {
+    setPlaybackRate(parseFloat(e.target.value));
+  };
+
+  const handleOnPlaybackRateChange = (speed) => {
+    setPlaybackRate(parseFloat(speed));
+  };
+
+  const handleTogglePIP = () => {
+    setPip(!pip);
+  };
+
+  const handlePlay = () => {
+    console.log('onPlay');
+    setPlaying(true);
+  };
+
+  const handleEnablePIP = () => {
+    console.log('onEnablePIP');
+    setPip(true);
+  };
+
+  const handleDisablePIP = () => {
+    console.log('onDisablePIP');
+    setPip(false);
+  };
+
+  const handlePause = () => {
+    console.log('onPause');
+    setPlaying(false);
+  };
+  const handleSeekMouseDown = () => {
+    setSeeking(true);
+  };
+
+  const handleSeekChange = (e) => {
+    if (seeking) {
+      setPlayed(parseFloat(e.target.value));
     }
-  }, [cardIndex, cards.length]);
+  };
+
+  const handleSeekMouseUp = (e) => {
+    if (seeking) {
+      setSeeking(false);
+      const seekTo = parseFloat(e.target.value);
+      if (playerRef.current && playerRef.current.seekTo) {
+        playerRef.current.seekTo(seekTo);
+      }
+    }
+  };
+  const handleBuffer = () => {
+    const video = videoRef.current;
+    if (video) {
+      if (video.paused && !video.seeking) {
+        console.log('Buffering...');
+      }
+    }
+  };
+  const handleReady = () => {
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener('waiting', handleBuffer);
+      video.addEventListener('playing', handleBuffer);
+    }
+  };
+  
+  
+
+  const handleProgress = (state) => {
+    console.log('onProgress', state);
+    if (!seeking) {
+      setPlayed(state.played);
+      setLoaded(state.loaded);
+    }
+  };
+
+  const handleEnded = () => {
+    console.log('onEnded');
+    setPlaying(loop);
+  };
+
+  const handleDuration = (duration) => {
+    console.log('onDuration', duration);
+    setDurationn(duration);
+  };
+
+  const handleClickFullscreen = () => {
+    screenfull.request(document.querySelector('.react-player'));
+  };
+
+  const renderLoadButton = (url, label) => {
+    return <button onClick={() => load(url)}>{label}</button>;
+  };
+
+  let player;
+
+  const ref = (ref) => {
+    player = ref;
+  };
+  const [showControls, setShowControls] = useState(true);
+const [open, setOpen] = useState(false);
+const dispatch = useDispatch();
+const [cardIndex, setCardIndex] = useState(null);
+const [videoUrl, setVideoUrl] = useState('');
+const cardListRef = useRef(null);
+
+useEffect(() => {
+  dispatch(fetchMusic());
+}, [dispatch]);
+
+const music = useSelector((state) => state.music.data);
+console.log("this is my life.,.,,,..,", music);
+const movies = Array.isArray(music?.movies) ? music.movies : [];
+console.log("first music", movies);
+
+const [firstMovie] = movies; // Extracting the first movie object
+  
+// Destructuring assignment
+const {
+  categories = {},
+  categoryid,
+  channelid,
+  channels = [],
+  description,
+  duration,
+  id,
+  title,
+  typeid,
+  types = {},
+  videourl
+} = firstMovie || {};
+// const imageUrl=channels.img;
+console.log('image is', channels.img)
+const imageUrl = channels.img;
+console.log("image display on",imageUrl)
+
+useEffect(() => {
+  if (cardIndex !== null && cardListRef.current) {
+    const cardList = cardListRef.current;
+    const cardWidth = 240; // Adjusted width to fit 4 cards per window
+    const containerWidth = cardList.offsetWidth;
+
+    let translateX = 0;
+
+    if (cardIndex * cardWidth + cardWidth > containerWidth) {
+      translateX = (cardIndex - Math.floor(containerWidth / cardWidth) + 1) * cardWidth;
+    }
+
+    cardList.style.transform = `translateX(-${translateX}px)`;
+  }
+}, [cardIndex, movies.length]);
+
+const handleCardClick = (index) => {
+  const clickedMovie = movies[index];
+  setCardIndex(index);
+  if (clickedMovie.videourl) {
+    setVideoUrl(clickedMovie.videourl);
+  }
+};
+
+  
 
   return (
     // fetchMovies(),
@@ -159,88 +303,89 @@ console.log("first musc",movies)
               padding:'20px 0px 20px 10px'
               
             }
-          }}>
+          }}>    
 
-            <Box  onClick={() => handleCardClick(0)} sx={{cursor:'pointer'}}><SiFox/> FOX</Box>
-            <Box  onClick={() => handleCardClick(channels.id)} ><MdOutlineAbc /> {channels.name}</Box>
-            <Box onClick={() => handleCardClick(2)}><PiTelevisionSimpleFill /> MBC TV</Box>
-            <Box onClick={() => handleCardClick(3)}><SiNbc /> NBC</Box>
-            <Box onClick={() => handleCardClick(4)}><PiTelevisionSimpleFill /> HBO</Box>
-            <Box onClick={() => handleCardClick(5)}><PiTelevisionSimpleFill /> City TV</Box>
-            <Box onClick={() => handleCardClick(6)}><FcBbc /> BBC</Box>
-            <Box onClick={() => handleCardClick(7)}><FcBbc /> ESNP</Box>
-            <Box onClick={() => handleCardClick(8)}><TbBrandDisney /> Disney</Box>
-            <Box onClick={() => handleCardClick(9)}><SiCnn /> CNN</Box>
-
-           </Box>
-
-       
-
-        </Grid>
-        <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Box className="media-player" sx={{
-            height: '50vh',
-            width: '98%',
-            background: '#36316e',
-            mx: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative',
-            zIndex: 1,
-            mt:'20px',
-            '@media (max-width: 600px)': {
-              height: '50vh',
-              width: '90%',
-            }
-          }}>
-            {cardIndex !== null && videoUrl && (
-              // <iframe
-              //   title="Video Player"
-              //   src={videoUrl}
-              //   style={{ width: '100%', height: '100%', border: 'none' }}
-              // />
-
-              // <iframe width="100%" height="90%"
-              //  src={videoUrl}
-              //   title="YouTube video player"
-              //    frameborder="0"
-              //    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              // referrerpolicy="strict-origin-when-cross-origin" 
-              // allowfullscreen>
-
-              // </iframe>
-              <ReactPlayer
-              url={videoUrl}
-              controls={showControls}
-              width="100%"
-              height="100%"
-              playing={true} // Autoplay enabled
-              loop
-              muted={false} // Unmute the video
-              playbackRate={1} // Adjust playback speed (1.0 is normal speed)
-              volume={0.8} // Set the volume (0.0 to 1.0)
-              progressInterval={1000} // Update progress every 1 second
-              pip={true} // Enable Picture-in-Picture mode
-              onControlsStateChange={(state) => setShowControls(state.controls)}
-            />
+      {movies.map((movie, index) => (
+        // console.log("idididididdididididdi",movie.id),
+          <Box key={movie.id} onClick={() => handleCardClick(index)} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            {movie.channels.img ? (
+              <img src={movie.channels.img} alt={movie.channels.name} style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+            ) : (
+              <span>No image available</span>
             )}
- 
-            {cardIndex !== null && (
-              <Box
-                className="overlay"
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(0, 0, 0, 0.5)',
-                  zIndex: 2,
-                }}
-              />
-            )}
+            {movie.channels.name || 'Unknown'}
           </Box>
+        ))}
+          
+    </Box>
+        </Grid>
+  <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
+        
+  <Box className="media-player" sx={{
+  height: '50vh',
+  width: '98%',
+  background: '#36316e',
+  mx: 'auto',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'relative',
+  zIndex: 1,
+  mt: '20px',
+  '@media (max-width: 600px)': {
+    height: '50vh',
+    width: '90%',
+  }
+}}>
+  
+  {cardIndex !== null && videoUrl && (
+    <ReactPlayer
+      ref={playerRef}
+      
+      className='react-player'
+      width='100%'
+      height='100%'
+      url={videoUrl}
+      pip={pip}
+      playing={playing}
+      controls={controls}
+      light={light}
+      loop={loop}
+      playbackRate={playbackRate}
+      volume={volume}
+      muted={muted}
+      onReady={handleReady}
+      onStart={() => console.log('onStart')}
+      onPlay={handlePlay}
+      onEnablePIP={handleEnablePIP}
+      onDisablePIP={handleDisablePIP}
+      onPause={handlePause}
+      onBuffer={() => console.log('onBuffer')}
+      onPlaybackRateChange={handleOnPlaybackRateChange}
+      onSeek={e => console.log('onSeek', e)}
+      onEnded={handleEnded}
+      onError={e => console.log('onError', e)}
+      onProgress={handleProgress}
+      onDuration={handleDuration}
+      onPlaybackQualityChange={e => console.log('onPlaybackQualityChange', e)}
+    />
+  )}
+  {cardIndex !== null && (
+    <Box
+      className="overlay"
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 2,
+      }}
+    />
+  )}
+
+</Box>
           <Grid container className="card-wrapper" sx={{
             height: '40vh',
             overflowX: 'auto',
@@ -253,50 +398,160 @@ console.log("first musc",movies)
               height: '30vh',
             }
           }}>
-            <Box ref={cardListRef} className="card-list" sx={{ display: 'flex', justifyContent: 'flex-start', transition: 'transform 0.3s ease-out' }}>
-              {cards.map((card, index) => (
-                <Card
-                  key={card.id}
-                  className={`card ${index === cardIndex ? 'active' : ''}`}
-                  sx={{
-                    minWidth: '15vw',
-                    m: 1,
-                    cursor: 'pointer',
-                    border: '0.5px lightgray solid',
-                    transition: 'transform 0.3s ease-out, box-shadow 0.3s ease-out',
-                    transform: index === cardIndex ? 'scale(1.1)' : 'scale(1)',
-                    boxShadow: index === cardIndex ? '0px 2px 4px rgba(0, 0, 0, 0.2)' : 'none',
-                    position: 'relative',
-                    zIndex: index === cardIndex ? 3 : 2,
-                    backgroundColor: '#1e1582',
-                    color: 'white',
-                   
-                    '@media (max-width: 600px)': {
-                      flexWrap:'wrap',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      height: '50vh',
-                      background: '#1a205c',
-                      width:'200px'
-                    }
-                  }}
-                  onClick={() => handleCardClick(index)}
-                >
-                  <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Box sx={{ width: '90%', height: '60%', display: 'flex', alignItems: 'center', justifyContent: 'center',background:'#392f80', '@media (max-width: 600px)': { width: '80px', height: '80px' } }}>
-                      {React.cloneElement(card.icon, { size: 60, color: 'white', background:'black'})} {/* Adjust the size as needed */}
-                    </Box>
-                    <Typography variant="h5" sx={{ mt: 1, '@media (max-width: 600px)': { fontSize: '1rem' } }}>
-                      {card.title}
-                    </Typography>
-                    <Typography variant="body1" sx={{ textAlign: 'center', '@media (max-width: 600px)': { fontSize: '0.8rem' } }}>
-                      {card.content}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
+<Box ref={cardListRef} className="card-list" sx={{ display: 'flex', justifyContent: 'flex-start', transition: 'transform 0.3s ease-out' }}>
+  {movies.map((movie, index) => (
+    <Card
+      key={movie.id}
+      className={`card ${index === cardIndex ? 'active' : ''}`}
+      sx={{
+        minWidth: '15vw',
+        m: 1,
+        cursor: 'pointer',
+        border: '0.5px lightgray solid',
+        transition: 'transform 0.3s ease-out, box-shadow 0.3s ease-out',
+        transform: index === cardIndex ? 'scale(1.1)' : 'scale(1)',
+        boxShadow: index === cardIndex ? '0px 2px 4px rgba(0, 0, 0, 0.2)' : 'none',
+        position: 'relative',
+        zIndex: index === cardIndex ? 3 : 2,
+        backgroundColor: 'rgba(30, 21, 130, 0.8)', // Updated with alpha value
+        color: 'white',
+        '@media (max-width: 600px)': {
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          height: '50vh',
+          background: 'rgba(26, 32, 92, 0.8)', // Updated with alpha value
+          width: '200px',
+        },
+      }}
+      onClick={() => handleCardClick(index)}
+    >
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box
+  sx={{
+    width: '90%',
+    height: '60%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'white',
+    '@media (max-width: 600px)': { width: '80px', height: '80px' },
+  }}
+>       {/* Render the static icon */}
+          {/* <SiFox size={60} color="white" /> */}
+          {/* Render the dynamic icon from the database */} 
+          {/* {movie.channels.img} */}
+        
+          {imageUrl ? (
+      <img src={movie.channels.img} alt="Channel Icon" style={{ width: '60px', height: '60px' }} />
+          ) : (
+            <p>No image available</p>
+          )}
+         
+        </Box>
+        <Typography variant="h5" sx={{ mt: 1, '@media (max-width: 600px)': { fontSize: '1rem' } }}>
+          {movie.title} - {movie.types.name}
+        </Typography>
+        <Typography variant="body1" sx={{ textAlign: 'center', '@media (max-width: 600px)': { fontSize: '0.8rem' } }}>
+          {movie.description}
+        </Typography>
+      </CardContent>
+    </Card>
+  ))}
+</Box>
+            <Box sx={{ width: '60%', display: 'flex',}}>
+                <React.Fragment>
+                <table>
+                        <tbody>
+                          <tr>
+                            <th>Controls</th>
+                            <td>
+                              <button onClick={handleStop}>Stop</button>
+                              <button onClick={handlePlayPause}>{playing ? 'Pause' : 'Play'}</button>
+                              <button onClick={handleClickFullscreen}>Fullscreen</button>
+                              {light &&
+                                <button onClick={() => player.showPreview()}>Show preview</button>}
+                              {ReactPlayer.canEnablePIP(url) &&
+                                <button onClick={handleTogglePIP}>{pip ? 'Disable PiP' : 'Enable PiP'}</button>}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Speed</th>
+                            <td>
+                              <button onClick={handleSetPlaybackRate} value={1}>1x</button>
+                              <button onClick={handleSetPlaybackRate} value={1.5}>1.5x</button>
+                              <button onClick={handleSetPlaybackRate} value={2}>2x</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Seek</th>
+                            <td>
+                              <input
+                                  type="range"
+                                  min={0}
+                                  max={1}
+                                  step="any"
+                                  value={played}
+                                  onMouseDown={handleSeekMouseDown}
+                                  onChange={handleSeekChange}
+                                  onMouseUp={handleSeekMouseUp}
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Volume</th>
+                            <td>
+                              <input type='range' min={0} max={1} step='any' value={volume} onChange={handleVolumeChange} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>
+                              <label htmlFor='controls'>Controls</label>
+                            </th>
+                            <td>
+                              <input id='controls' type='checkbox' checked={controls} onChange={handleToggleControls} />
+                              <em>&nbsp; Requires player reload</em>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>
+                              <label htmlFor='muted'>Muted</label>
+                            </th>
+                            <td>
+                              <input id='muted' type='checkbox' checked={muted} onChange={handleToggleMuted} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>
+                              <label htmlFor='loop'>Loop</label>
+                            </th>
+                            <td>
+                              <input id='loop' type='checkbox' checked={loop} onChange={handleToggleLoop} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>
+                              <label htmlFor='light'>Light mode</label>
+                            </th>
+                            <td>
+                              <input id='light' type='checkbox' checked={light} onChange={handleToggleLight} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Played</th>
+                            <td><progress max={1} value={played} /></td>
+                          </tr>
+                          <tr>
+                            <th>Loaded</th>
+                            <td><progress max={1} value={loaded} /></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                     
+                </React.Fragment>
+                </Box>
           </Grid>
+          
         </Grid>
       </Grid>
     </Box>

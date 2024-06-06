@@ -16,6 +16,8 @@ model categories {
 model channels {
   id     Int      @id @default(autoincrement())
   name   String?  @db.VarChar(255)
+  img     String? @db.VarChar(255)
+  localImgPath String? @db.VarChar(255)
   movies movies[]
 }
 model movies {
